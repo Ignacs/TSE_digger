@@ -1,4 +1,5 @@
-﻿import sys
+﻿#-*- coding:utf-8 -*-
+import sys
 import urllib.request 
 import os.path 
 import time
@@ -55,7 +56,7 @@ if(cond1):
       print ('output folder (' +outDST +') cant build')   
       cond1A=0
   # Check output folder exist
-  outAB=outPATH+'/AB/'
+  outAB=outPATH+'/AB/' 
   cond2A=os.path.exists(outAB)
   if (not cond2A):
     try:
@@ -119,39 +120,43 @@ if(cond1):
             condIDX=0          
       else:
         condIDX=1
-        print(strDSTIDX1+"already exist")       
+        print(strDSTIDX1+" already exist")       
          
-      if (condIDX and os.path.getsize(strDSTIDX1) <=2048):
-          print("  Warning ("+strDSTIDX1+") is not a valid file， ("+YYYY+MM+DD+") is not a trade day\n")
-          os.remove(strDSTIDX1) 
-          condIDX=0
-      else:       
-          if condIDX:             
-            Cond1=os.path.exists(strDSTIDX1)
-            if Cond1:
-              sectionstart=0
-              u1=open(strDSTIDX1)
-              rows = u1.read().split('\n')
-              outfileT1=outAB+YYYY+MM+DD+'.csv'
-              f1 = open(outfileT1, 'w')
-              print('      產生' + outfileT1+' 中') 
-              #f.write('證券代號,證券名稱,成交股數,成交筆數,成交金額,開盤價,最高價,最低價,收盤價,漲跌(+/-),漲跌價差,最後揭示買價,最後揭示買量,最後揭示賣價,最後揭示賣量,本益比'+'\n')
-              for row in rows:
-                  row=p.sub(lambda m: m.groups()[0].replace(',',''), row)
-                  row=row.replace('=','')
-                  #row=row.replace('"','')
-                  if ('SID' in row):
-                      sectionstart=1
-                  if (sectionstart==1 and (not 'sign' in row) and (not 'description' in row) and (row!='')):
-                      if ('SID' in row):
-                          f1.write('證券代號,日期,開盤價,最高價,最低價,收盤價,成交張數,證券名稱,成交筆數,成交金額,漲跌(+/-),漲跌價差,最後揭示買價,最後揭示買量,最後揭示賣價,最後揭示賣量,本益比\n')    
-                      else:	
-                          item=row.split(',')
-                          if (int(item[2]) !=0):
-                              f1.write(item[0]+'.TW,'+YYYY+'/'+MM+'/'+DD+','+item[5]+','+item[6]+','+item[7]+','+item[8]+','+str(float(item[2])/1000)+','+item[1]+','+item[3]+','+item[4]+','+item[9]+','+item[10]+','+item[11]+','+item[12]+','+item[13]+','+item[14]+','+item[15]+'\n')
-              f1.close()  
-              u1.close()
-              print('      上市台股盤後資料 (' + outfileT1+') 完成\n')
+# Ignore AB database output # 2015/5/4
+#      if (condIDX and os.path.getsize(strDSTIDX1) <=2048):
+#          print("  Warning ("+strDSTIDX1+") is not a valid file， ("+YYYY+MM+DD+") is not a trade day\n")
+#          os.remove(strDSTIDX1) 
+#          condIDX=0
+#      else:       
+#          if condIDX:             
+#            Cond1=os.path.exists(strDSTIDX1)
+#            if Cond1:
+#              sectionstart=0
+#              u1=open(strDSTIDX1, encoding="utf-8") 
+#              #u1 = strDSTIDX1.decode('big5','replace')
+#              # u1 = unicode(stringVar,'big5','replace')
+#              rows = u1.read().split(('\n').encodine('utf-8'))
+#              outfileT1=outAB+YYYY+MM+DD+'.csv'
+#              f1 = open(outfileT1, 'w')
+#              print('      產生' + outfileT1+' 中') 
+#              #f.write('證券代號,證券名稱,成交股數,成交筆數,成交金額,開盤價,最高價,最低價,收盤價,漲跌(+/-),漲跌價差,最後揭示買價,最後揭示買量,最後揭示賣價,最後揭示賣量,本益比'+'\n')
+#              for row in rows:
+#                  row=p.sub(lambda m: m.groups()[0].replace(',',''), row)
+#                  row=row.replace('=','')
+#                  #row=row.replace('"','')
+#                  if ('SID' in row):
+#                      sectionstart=1
+#                  if (sectionstart==1 and (not 'sign' in row) and (not 'description' in row) and (row!='')):
+#                      if ('SID' in row):
+#                          f1.write('證券代號,日期,開盤價,最高價,最低價,收盤價,成交張數,證券名稱,成交筆數,成交金額,漲跌(+/-),漲跌價差,最後揭示買價,最後揭示買量,最後揭示賣價,最後揭示賣量,本益比\n')    
+#                      else:	
+#                          item=row.split(',')
+#                          if (int(item[2]) !=0):
+#                              f1.write(item[0]+'.TW,'+YYYY+'/'+MM+'/'+DD+','+item[5]+','+item[6]+','+item[7]+','+item[8]+','+str(float(item[2])/1000)+','+item[1]+','+item[3]+','+item[4]+','+item[9]+','+item[10]+','+item[11]+','+item[12]+','+item[13]+','+item[14]+','+item[15]+'\n')
+#              f1.close()  
+#              u1.close()
+#              print('      上市台股盤後資料 (' + outfileT1+') 完成\n')
+              
     else:
        print('Date : ('+yesterday.strftime('%Y%m%d')+') cant download')         
     yesterday = yesterday + timedelta(1)             
