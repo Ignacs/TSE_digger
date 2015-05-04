@@ -122,11 +122,11 @@ if(cond1):
         condIDX=1
         print(strDSTIDX1+" already exist")       
          
+      if (condIDX and os.path.getsize(strDSTIDX1) <=2048):
+          print("  Warning ("+strDSTIDX1+") is not a valid file， ("+YYYY+MM+DD+") is not a trade day\n")
+          os.remove(strDSTIDX1) 
+          condIDX=0
 # Ignore AB database output # 2015/5/4
-#      if (condIDX and os.path.getsize(strDSTIDX1) <=2048):
-#          print("  Warning ("+strDSTIDX1+") is not a valid file， ("+YYYY+MM+DD+") is not a trade day\n")
-#          os.remove(strDSTIDX1) 
-#          condIDX=0
 #      else:       
 #          if condIDX:             
 #            Cond1=os.path.exists(strDSTIDX1)
