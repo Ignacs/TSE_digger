@@ -16,8 +16,8 @@ strURL2B='ALLBUT0999_1.php&type=csv'
 today = datetime.today()
 yesterday=today
 
-dayback=sys.argv[1]   #下載資料日數[以今日起算]
-outPATH= sys.argv[2]  #檔案輸出目錄
+dayback=sys.argv[1]   # How many day to download (count from today)
+outPATH= sys.argv[2]  # Output folder
 
 if dayback=='':
     daynumMAX=1
@@ -31,20 +31,20 @@ else:
 for i in range(1,daynumMAX):
     yesterday = yesterday - timedelta(1)  
 
-#檢查輸出目錄是否存在
+# Check folder exist?
 cond1=os.path.exists(outPATH)
 if (not cond1):
   try:
     os.system('mkdir '+outPATH) 
     cond1=1
   except IOError as IOE :
-    print ('輸出目錄' +outPATH +' 無法建立')   
+    print ('output folder (' +outPATH +' ) cant build')   
     cond1=0
 
-#確認輸出目錄建立成功，才進行
+# Confirm output folder exist 
 
 if(cond1):
-  #檢查輸出目錄是否存在         
+  # Check output folder exist
   outDST=outPATH+'CLOSE\\'  
   cond1A=os.path.exists(outDST)
   if (not cond1A):
@@ -52,9 +52,9 @@ if(cond1):
       os.system('mkdir '+outDST) 
       cond1A=1
     except IOError as IOE :
-      print ('輸出目錄' +outDST +' 無法建立')   
+      print ('output folder (' +outDST +') cant build')   
       cond1A=0
-  #檢查輸出目錄是否存在         
+  # Check output folder exist
   outAB=outPATH+'AB\\'
   cond2A=os.path.exists(outAB)
   if (not cond2A):
@@ -62,14 +62,14 @@ if(cond1):
       os.system('mkdir '+outAB) 
       cond2A=1
     except IOError as IOE :
-      print ('輸出目錄' +outAB +' 無法建立')   
+      print ('Output folder (' +outAB +') cant build')   
       cond2A=0
-  #開始下載
+  # begin to download
   for daynum in range(1,daynumMAX+1):      
     #print (int(yesterday.strftime('%Y%m%d')))                    
     if( int(yesterday.strftime('%Y%m%d')) >= 20040211):
       inputEntry = yesterday.strftime('%Y_%m_%d').split('_')
-      #日期檢查    
+      # Check date
       YYYY= inputEntry[0]
       MM= inputEntry[1]
       DD=inputEntry[2] 
@@ -94,14 +94,14 @@ if(cond1):
               else:
                   YYYY1='%04d'%(TAIYYYY1)    
       
-      print('\n(%04d'%daynum+'/%04d'%daynumMAX+'):'+YYYY+MM+DD+' 開始')
-      #每日收盤行情
+      print('\n(%04d'%daynum+'/%04d'%daynumMAX+'):'+YYYY+MM+DD+' start')
+      # daily close
       condIDX=0
       #strTSEIDX1=strURL1A+YYYY+MM+'/A112'+YYYY+MM+DD+strURL1B+YYYY1+'/'+MM+'/'+DD
       strDSTIDX1=outDST+YYYY+MM+DD+'.csv'
       Cond2=os.path.exists(strDSTIDX1)
       if not Cond2:              
-        print ('連線')  
+        print ('Connection')  
         for retryCount in range(0,3): 
           try:
             time.sleep(0.2)  
@@ -111,18 +111,18 @@ if(cond1):
           except IOError as IOE :
             time.sleep(2)   
             condIDX=0
-            print ('出現連線問題: 嘗試',retryCount)  
+            print ('Connect error: try',retryCount)  
         if  condIDX:
-            print('(%03d'%daynum+')  (1): '+strDSTIDX1+' 下載完成')
+            print('(%03d'%daynum+')  (1): '+strDSTIDX1+' download complete')
         else:
-            print("  警告 ("+YYYY+MM+DD+") 並不是交易日")  
+            print("  Warning :("+YYYY+MM+DD+") is not a trade day")  
             condIDX=0          
       else:
         condIDX=1
-        print(strDSTIDX1+"已經存在")       
+        print(strDSTIDX1+"already exist")       
          
       if (condIDX and os.path.getsize(strDSTIDX1) <=2048):
-          print("  警告 ("+strDSTIDX1+") 不是一個有效的檔案， ("+YYYY+MM+DD+") 並不是交易日\n")
+          print("  Warning ("+strDSTIDX1+") is not a valid file， ("+YYYY+MM+DD+") is not a trade day\n")
           os.remove(strDSTIDX1) 
           condIDX=0
       else:       
@@ -140,10 +140,10 @@ if(cond1):
                   row=p.sub(lambda m: m.groups()[0].replace(',',''), row)
                   row=row.replace('=','')
                   #row=row.replace('"','')
-                  if ('證券代號' in row):
+                  if ('SID' in row):
                       sectionstart=1
-                  if (sectionstart==1 and (not '漲跌符號' in row) and (not '說明' in row) and (row!='')):
-                      if ('證券代號' in row):
+                  if (sectionstart==1 and (not 'sign' in row) and (not 'description' in row) and (row!='')):
+                      if ('SID' in row):
                           f1.write('證券代號,日期,開盤價,最高價,最低價,收盤價,成交張數,證券名稱,成交筆數,成交金額,漲跌(+/-),漲跌價差,最後揭示買價,最後揭示買量,最後揭示賣價,最後揭示賣量,本益比\n')    
                       else:	
                           item=row.split(',')
@@ -153,9 +153,9 @@ if(cond1):
               u1.close()
               print('      上市台股盤後資料 (' + outfileT1+') 完成\n')
     else:
-       print('指定日期: ('+yesterday.strftime('%Y%m%d')+') 無法下載')         
+       print('Date : ('+yesterday.strftime('%Y%m%d')+') cant download')         
     yesterday = yesterday + timedelta(1)             
       
 else:
-    print('指定輸出目錄: ('+outPATH+') 無法建立')
-print('盤後資料下載完成')
+    print('Output folder: ('+outPATH+') cant build')
+print('Close data download completion')
