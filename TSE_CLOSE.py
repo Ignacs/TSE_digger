@@ -45,7 +45,7 @@ if (not cond1):
 
 if(cond1):
   #檢查輸出目錄是否存在         
-  outDST=outPATH+'CLOSE\\'  
+  outDST=outPATH+'/CLOSE/'
   cond1A=os.path.exists(outDST)
   if (not cond1A):
     try:
@@ -55,7 +55,7 @@ if(cond1):
       print ('輸出目錄' +outDST +' 無法建立')   
       cond1A=0
   #檢查輸出目錄是否存在         
-  outAB=outPATH+'AB\\'
+  outAB=outPATH+'/AB/'
   cond2A=os.path.exists(outAB)
   if (not cond2A):
     try:
