@@ -1,4 +1,15 @@
 README.TXT 本檔案
+
+(0) TSE_eachone.bat 下載上市股票(不含權證)歷史資料
+    Usage: 
+        python3.2 ./TSE_CLOSE.py 3 /media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/TSE_daily_data
+    Argument:
+        1. Python 執行檔的路徑
+        2. Python Script 的路徑
+        3. 數字是檔案下載的日數，以今日回算，如果以 2013/6/9 看,數字3就是 2013/6/7 ~ 2013/6/9 
+        4. 輸出檔案的目錄) 
+
+    
 (1) TSE_CLOSE.bat 下載上市股票(不含權證)收盤資料
     指令格式範例 C:\python33\python C:\盤後\TSE_CLOSE.py 3 C:\盤後\TSE\
     (第一個是Python 執行檔的路徑)上述例子為 C:\python33\python 
