@@ -23,6 +23,7 @@ except:
 #		print "Failed to create it."
 	exit
 
+# for nline_data in csv.reader(f, quotechar='"', quoting=csv.QUOTE_NONE):
 for nline_data in csv.reader(f):
 	csv_line = csv_line+1
 
@@ -64,13 +65,15 @@ for nline_data in csv.reader(f):
 			# print "output to ", stock_indep_file, 
 			try:
 				# output to file
-				f=open(stock_indep_file, "w")
+				f=open(stock_indep_file, "a")
 				# information begins from 2nd element
 				for sec_idx in range(2, 16):
 					# sperate with ";" not ','
 					f.write(str(nline_data[sec_idx]) )
 					if 15 != sec_idx:
 						f.write(";")
+					elif 15 == sec_idx:
+						f.write("\n")
 				f.close()
 			except:	
 				print "Failed to write file. exit"
@@ -133,22 +136,28 @@ for nline_data in csv.reader(f):
 			# print "output to ", stock_indep_file, 
 			try:
 				# output to file
-				f = open(stock_indep_file, "w")
+				f = open(stock_indep_file, "a")
 				# information begins from 2nd element
 				for sec_idx in range(2, 16):
 					# sperate with ";" not ','
 					f.write(str(nline_data[sec_idx]) )
 					if 15 != sec_idx:
 						f.write(";")
+					elif 15 == sec_idx:
+						f.write("\n")
 				f.close()
 			except:	
 				print "Failed to write file. exit"
 				exit
 
 
-	elif 1 == csv_line:
-		# try to get first line : date
+	else:
+		# try to get first line not null : date
+		if 0 == len(str(nline_data)):
+			print "NULL string"
+			continue
 		date_line=str(nline_data)
+		# show contants:
 		try:
 			print date_line.decode('utf-8')
 		except UnicodeDecodeError:
