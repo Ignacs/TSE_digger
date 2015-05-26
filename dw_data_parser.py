@@ -3,7 +3,7 @@ import csv
 import os, sys, platform
 
 f = open(sys.argv[1], 'r')
-# j=0
+# j=0 
 csv_line=0
 # print "argv len : "+ str(len(sys.argv))
 if  3 > len(sys.argv):
@@ -32,8 +32,8 @@ for nline_data in csv.reader(f):
 		# print id  and no NEW LINE (Include ",")
 		sid=str(nline_data[0])
 
-		# print stock name in chinese
-		name=str(nline_data[1])
+		# print stock name in chinese and trim string
+		name=str(nline_data[1]).strip()
 
 		if sid.isdigit():
 		#	print nline_data[0], 
@@ -44,14 +44,14 @@ for nline_data in csv.reader(f):
 				# print name.decode('utf-8')
 
 				# output path
-				stock_indep_file=os.path.join(output_folder, sid + '_' + name.decode('utf-8') )
+				stock_indep_file = os.path.join(output_folder, sid + '_' + name.decode('utf-8') )
 				str_encode='utf8'
 			except:	
 				try: 
 					# print name.decode('big5')
 
 					# output path
-					stock_indep_file=os.path.join(output_folder, sid + '_' + name.decode('big5') )
+					stock_indep_file = os.path.join(output_folder, sid + '_' + name.decode('big5') )
 					str_encode='big5'
 				except:
 					print 'cant handle name ' + sid # + ' not encode big5 '
@@ -60,7 +60,6 @@ for nline_data in csv.reader(f):
 				if 'big5'!= str_encode:
 					print "ascii string " + name 
 					continue
-			
 
 			# print "output to ", stock_indep_file, 
 			try:
@@ -150,7 +149,6 @@ for nline_data in csv.reader(f):
 				print "Failed to write file. exit"
 				exit
 
-
 	else:
 		# try to get first line not null : date
 		if 0 == len(nline_data):
@@ -166,7 +164,6 @@ for nline_data in csv.reader(f):
 
 		# for idx in range(0, len(date_line)):
 		#	print idx
-
 		
 	#else:
 	#	print "too long to handle : [" + str(nline_data) + "]"
