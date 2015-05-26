@@ -7,19 +7,23 @@ total_stock_file = open(sys.argv[1], 'r')
 csv_line=0
 today=''
 era=''
+# print "argv len : "+ str(len(sys.argv))
+if  3 > len(sys.argv):
+	print "Too few arguments."
+	sys.exit()	
 
-output_folder='/media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/stock'
+output_folder=str(sys.argv[2])
 
 # check output file 
 try:
 	os.stat(output_folder)
 except:	
 	print "Not exist, try to create it."
-	try :
-		os.makedirs(output_folder)
-	except:
-		print "Failed to create it."
-		exit
+#	try :
+#		os.makedirs(output_folder)
+#	except:
+#		print "Failed to create it."
+	exit
 
 for nline_data in csv.reader(total_stock_file):
 	csv_line = csv_line+1
@@ -56,12 +60,13 @@ for nline_data in csv.reader(total_stock_file):
 			if 'utf8' != str_encode:
 				if 'big5'!= str_encode:
 					print "ascii string " + name 
+					continue
 			
 
 			# print "output to ", stock_indep_file, 
 			try:
 				# output to file
-				f=open(stock_indep_file, "w")
+				f=open(stock_indep_file, "a")
 
 				# write date into file as first element 
 				if '' != today:
@@ -73,6 +78,8 @@ for nline_data in csv.reader(total_stock_file):
 					f.write(str(nline_data[sec_idx]) )
 					if 15 != sec_idx:
 						f.write(";")
+					elif 15 == sec_idx:
+						f.write("\n")
 				f.close()
 			except:	
 				print "Failed to write file. exit"
@@ -135,7 +142,7 @@ for nline_data in csv.reader(total_stock_file):
 			# print "output to ", stock_indep_file, 
 			try:
 				# output to file
-				f = open(stock_indep_file, "w")
+				f = open(stock_indep_file, "a")
 
 				# write date into file as first element 
 				if '' != today:
@@ -147,14 +154,20 @@ for nline_data in csv.reader(total_stock_file):
 					f.write(str(nline_data[sec_idx]) )
 					if 15 != sec_idx:
 						f.write(";")
+					elif 15 == sec_idx:
+						f.write("\n")
 				f.close()
 			except:	
 				print "Failed to write file. exit"
 				exit
 
 
-	elif 1 == csv_line:
-		# try to get first line : date
+	else:
+		# try to get first line not null : date
+		if 0 == len(nline_data):
+			print "NULL string"
+			continue
+			
 		date_line=str(nline_data)
 		# the first line, it should be like below one:
 		# ['104\xa6~05\xa4\xeb22\xa4\xe9\xa4j\xbdL\xb2\xce\xadp\xb8\xea\xb0T']
