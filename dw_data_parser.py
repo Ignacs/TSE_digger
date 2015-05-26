@@ -153,17 +153,16 @@ for nline_data in csv.reader(f):
 
 	else:
 		# try to get first line not null : date
-		if 0 == len(str(nline_data)):
+		if 0 == len(nline_data):
 			print "NULL string"
 			continue
+			
 		date_line=str(nline_data)
 		# show contants:
 		try:
 			print date_line.decode('utf-8')
 		except UnicodeDecodeError:
 			print date_line.decode('big5')
-		else:
-			print date_line.decode('ascii')
 
 		# for idx in range(0, len(date_line)):
 		#	print idx
