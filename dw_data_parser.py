@@ -5,19 +5,23 @@ import os, sys, platform
 f = open(sys.argv[1], 'r')
 # j=0
 csv_line=0
+# print "argv len : "+ str(len(sys.argv))
+if  3 > len(sys.argv):
+	print "Too few arguments."
+	sys.exit()	
 
-output_folder='/media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/stock'
+output_folder=str(sys.argv[2])
 
 # check output file 
 try:
 	os.stat(output_folder)
 except:	
 	print "Not exist, try to create it."
-	try :
-		os.makedirs(output_folder)
-	except:
-		print "Failed to create it."
-		exit
+#	try :
+#		os.makedirs(output_folder)
+#	except:
+#		print "Failed to create it."
+	exit
 
 for nline_data in csv.reader(f):
 	csv_line = csv_line+1
@@ -54,6 +58,7 @@ for nline_data in csv.reader(f):
 			if 'utf8' != str_encode:
 				if 'big5'!= str_encode:
 					print "ascii string " + name 
+					continue
 			
 
 			# print "output to ", stock_indep_file, 
