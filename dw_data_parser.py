@@ -27,6 +27,7 @@ except:
 
 for nline_data in csv.reader(total_stock_file):
 	csv_line = csv_line+1
+	date_line=str(nline_data)
 
 	# j=j+1
 	if len(nline_data) == 16:
@@ -162,13 +163,11 @@ for nline_data in csv.reader(total_stock_file):
 				exit
 
 
-	else:
+	elif 0 == len(nline_data):
+		# skip NULL string 
+		print "NULL string"
+	elif date_line[2].isdigit() and date_line[3].isdigit() and date_line[4].isdigit() and  date_line[10].isdigit() and date_line[11].isdigit() and date_line[20].isdigit() and date_line[21].isdigit():
 		# try to get first line not null : date
-		if 0 == len(nline_data):
-			print "NULL string"
-			continue
-			
-		date_line=str(nline_data)
 		# the first line, it should be like below one:
 		# ['104\xa6~05\xa4\xeb22\xa4\xe9\xa4j\xbdL\xb2\xce\xadp\xb8\xea\xb0T']
 		print date_line[2] + date_line[3] + date_line[4] + date_line[10] + date_line[11] + date_line[20] + date_line[21]
