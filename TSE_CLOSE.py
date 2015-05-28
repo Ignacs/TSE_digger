@@ -8,32 +8,51 @@ from datetime import datetime, timedelta
 import re
 
 # format 1
-strURL1A='http://www.twse.com.tw/ch/trading/exchange/MI_INDEX/genpage/Report'
-strURL1B='ALLBUT0999_1.php?select2=ALLBUT0999&chk_date='
+# strURL1A='http://www.twse.com.tw/ch/trading/exchange/MI_INDEX/genpage/Report'
+# strURL1B='ALLBUT0999_1.php?select2=ALLBUT0999&chk_date='
 
 # format 2
-strURL2A='http://www.twse.com.tw/ch/trading/exchange/MI_INDEX/MI_INDEX3_print.php?genpage=genpage/Report'
-strURL2B='ALLBUT0999_1.php&type=csv'
+# strURL2A='http://www.twse.com.tw/ch/trading/exchange/MI_INDEX/MI_INDEX3_print.php?genpage=genpage/Report'
+# strURL2B='ALLBUT0999_1.php&type=csv'
 
 # format 3, only for "TODAY" 
 # example : 'http://www.twse.com.tw/ch/trading/exchange/MI_INDEX/MI_INDEX.php?download=csv&qdate=104%2F05%2F26&selectType=MS'
-strURL3A='http://www.twse.com.tw/ch/trading/exchange/MI_INDEX/MI_INDEX.php?download=csv&qdate='
-strURL3B='&selectType=MS'
+# strURL3A='http://www.twse.com.tw/ch/trading/exchange/MI_INDEX/MI_INDEX.php?download=csv&qdate='
+# strURL3B='&selectType=MS'
 
 # format 4
 # example: http://www.twse.com.tw/ch/trading/exchange/MI_INDEX/MI_INDEX.php?download=csv&qdate=104%2F05%2F26&selectType=ALLBUT0999
-strURL4A='http://www.twse.com.tw/ch/trading/exchange/MI_INDEX/MI_INDEX.php?download=csv&qdate='
-strURL4B='&selectType=ALLBUT0999'
+
+strURLHistory='http://www.twse.com.tw/ch/trading/exchange/MI_INDEX/MI_INDEX.php'
+
+req_values = {'download' : 'csv',
+	'qdate' : '104/05/26',
+	'selectType' : 'ALLBUT0999' }
+
 
 ############### End of function ###############
 # Des: down CSV from specified URL 
 #
-def dw_CSV_from_URL(dw_URL, output_file):
+def dw_CSV_from_URL( TAI_Y, MM , DD , output_file):
+	print ("download " + TAI_Y + MM + DD ) 
+	condIDX=0
 	for retryCount in range(0,3):
 		try:
 			time.sleep(0.2)	
-			# example : 'http://www.twse.com.tw/ch/trading/exchange/MI_INDEX/MI_INDEX.php?download=csv&qdate=104%2F05%2F26&selectType=MS'
-			condIDX = urllib.request.urlretrieve(dw_URL, output_file)
+			req_values['qdate'] = TAI_Y + '/' + MM + '/' + DD 
+			print (req_values['qdate'])
+			
+			# new method to download
+			data = urllib.parse.urlencode(req_values)
+			req= urllib.request.Request(strURLHistory, data.encode('utf-8'))
+			response = urllib.request.urlopen(req)
+
+			f=open(output_file,"w")
+			for line in response.read().decode('CP950'):
+				if len(line)>0:
+					f.writelines(line)
+					condIDX = 1
+			f.close()
 			break 
 		except IOError as IOE :
 			time.sleep(2)	 
@@ -42,6 +61,7 @@ def dw_CSV_from_URL(dw_URL, output_file):
 
 	if	condIDX:
 		print('	(1): '+ output_file + ' download complete')
+		print(condIDX)
 	else: 
 		print("	Warning :("+YYYY+MM+DD+") is not a trade day")	
 		condIDX=0					
@@ -110,7 +130,7 @@ if(cond1):
 			DD=inputEntry[2] 
 
 			# count Chinese of years 
-			TAIYYYY=int(YYYY)-1911
+			TAIYYYY = int(YYYY)-1911
 
 			# if after era 2000
 			if int(YYYY) >2000:
@@ -136,55 +156,25 @@ if(cond1):
 			condIDX=0
 			# strTSEIDX1=strURL1A+YYYY+MM+'/A112'+YYYY+MM+DD+strURL1B+YYYY1+'/'+MM+'/'+DD
 			strDSTIDX1=outDST+YYYY+MM+DD+'.csv'
-			Cond2=os.path.exists(strDSTIDX1)
+			Cond2 = os.path.exists(strDSTIDX1)
 
-			# downaload today 
-			if daynumMAX+1 == daynum:
-				print ('today - using URL type 3')
-				# if file has not exist 
-				if not Cond2:
-					print ('Connection')	
-					# try to download with different website
-					strTSEURLIDX1=strURL3A+str(TAIYYYY1)+'%2F'+MM+'%2F'+DD+strURL3B
-					condIDX = dw_CSV_from_URL(strTSEURLIDX1, strDSTIDX1)
-				# if file exists
-				else:
-					condIDX=1
-					print(strDSTIDX1+" already exist")			 
-
-			# date not today
-			else:
-				# if file has not exist 
-				if not Cond2:							
-					print ('Connection')	
-					strTSEURLIDX1 = strURL2A+YYYY+MM+'/A112'+YYYY+MM+DD+strURL2B
-					condIDX = dw_CSV_from_URL(strTSEURLIDX1, strDSTIDX1)
-				
-				else: # if file exists
-					condIDX=1
-					print(strDSTIDX1+" already exist")			 
-					 
+			# if file has not exist 
+			if not Cond2:							
+				print ('Connection')	
+				condIDX = dw_CSV_from_URL( str(TAIYYYY1) , MM , DD, strDSTIDX1)
+			else: # if file exists
+				condIDX=1
+				print(strDSTIDX1+" already exist")			 
+				continue
+				 
 			# script got a file and too small than 2048 bytes
 			if (condIDX and os.path.getsize(strDSTIDX1) <=2048):
 				print("	Warning ("+strDSTIDX1+") is not a valid file， ("+YYYY+MM+DD+") is not a trade day\n")
 				# remove file and retry
 				os.remove(strDSTIDX1) 
 				condIDX=0
-
-				# try another format 
-				print ('Failed. Connection with another format')	
-				strTSEURLIDX1 = strURL4A + str(TAIYYYY1) + '%2F' + MM + '%2F'+ DD + strURL4B
-				condIDX = dw_CSV_from_URL(strTSEURLIDX1, strDSTIDX1)
-				if (condIDX and os.path.getsize(strDSTIDX1) <=2048):
-					print("	Warning ("+strDSTIDX1+") is not a valid file， ("+YYYY+MM+DD+") is not a trade day\n")
-					# remove file and retry
-					os.remove(strDSTIDX1) 
-					condIDX=0
-				else:
-					 print('Date : ('+yesterday.strftime('%Y%m%d')+') cant download')				 
-
 			else:
-				 print('Date : ('+yesterday.strftime('%Y%m%d')+') cant download')				 
+				print('Date : ('+yesterday.strftime('%Y%m%d')+') cant download')				 
 		# next day
 		yesterday = yesterday + timedelta(1)						 
 				
