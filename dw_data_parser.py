@@ -2,9 +2,11 @@
 import csv
 import os, sys, platform
 
-f = open(sys.argv[1], 'r')
-# j=0 
+total_stock_file = open(sys.argv[1], 'r')
+# j=0
 csv_line=0
+today=''
+era=''
 # print "argv len : "+ str(len(sys.argv))
 if  3 > len(sys.argv):
 	print "Too few arguments."
@@ -23,9 +25,9 @@ except:
 #		print "Failed to create it."
 	exit
 
-# for nline_data in csv.reader(f, quotechar='"', quoting=csv.QUOTE_NONE):
-for nline_data in csv.reader(f):
+for nline_data in csv.reader(total_stock_file):
 	csv_line = csv_line+1
+	date_line=str(nline_data)
 
 	# j=j+1
 	if len(nline_data) == 16:
@@ -65,6 +67,11 @@ for nline_data in csv.reader(f):
 			try:
 				# output to file
 				f=open(stock_indep_file, "a")
+
+				# write date into file as first element 
+				if '' != today:
+					f.write( today + ';')
+
 				# information begins from 2nd element
 				for sec_idx in range(2, 16):
 					# sperate with ";" not ','
@@ -136,6 +143,11 @@ for nline_data in csv.reader(f):
 			try:
 				# output to file
 				f = open(stock_indep_file, "a")
+
+				# write date into file as first element 
+				if '' != today:
+					f.write( today + ';')
+
 				# information begins from 2nd element
 				for sec_idx in range(2, 16):
 					# sperate with ";" not ','
@@ -149,18 +161,16 @@ for nline_data in csv.reader(f):
 				print "Failed to write file. exit"
 				exit
 
-	else:
+	elif 0 == len(nline_data):
+		# skip NULL string 
+		print "NULL string"
+	elif date_line[2].isdigit() and date_line[3].isdigit() and date_line[4].isdigit() and  date_line[10].isdigit() and date_line[11].isdigit() and date_line[20].isdigit() and date_line[21].isdigit():
 		# try to get first line not null : date
-		if 0 == len(nline_data):
-			print "NULL string"
-			continue
-			
-		date_line=str(nline_data)
-		# show contants:
-		try:
-			print date_line.decode('utf-8')
-		except UnicodeDecodeError:
-			print date_line.decode('big5')
+		# the first line, it should be like below one:
+		# ['104\xa6~05\xa4\xeb22\xa4\xe9\xa4j\xbdL\xb2\xce\xadp\xb8\xea\xb0T']
+		print date_line[2] + date_line[3] + date_line[4] + date_line[10] + date_line[11] + date_line[20] + date_line[21]
+		era=str(int(date_line[2])*100 + int(date_line[3])*10 + int(date_line[4]) + 1911)
+		today = era + date_line[10] + date_line[11] + date_line[20] + date_line[21]
 
 		# for idx in range(0, len(date_line)):
 		#	print idx
@@ -168,6 +178,6 @@ for nline_data in csv.reader(f):
 	#else:
 	#	print "too long to handle : [" + str(nline_data) + "]"
 		
-f.close()
+total_stock_file.close()
 
 
