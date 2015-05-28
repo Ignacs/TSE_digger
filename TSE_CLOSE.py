@@ -171,7 +171,8 @@ if(cond1):
 			if (condIDX and os.path.getsize(strDSTIDX1) <=2048):
 				print("	Warning ("+strDSTIDX1+") is not a valid file， ("+YYYY+MM+DD+") is not a trade day\n")
 				# remove file and retry
-				os.remove(strDSTIDX1) 
+				# dont Remove IT, thus script will remove again...
+				# os.remove(strDSTIDX1) 
 				condIDX=0
 			else:
 				print('Date : ('+yesterday.strftime('%Y%m%d')+') cant download')				 
