@@ -7,9 +7,14 @@ total_stock_file = open(sys.argv[1], 'r')
 csv_line=0
 today=''
 era=''
+# 
+# def usage():
+#	echo "python dw_data_parser.py xxx.csv"
+
 # print "argv len : "+ str(len(sys.argv))
 if  3 > len(sys.argv):
 	print "Too few arguments."
+	print "python dw_data_parser.py (csv flle download from TSE) (ouptut foloder)" 
 	sys.exit()	
 
 output_folder=str(sys.argv[2])
