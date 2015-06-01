@@ -11,6 +11,7 @@ era=''
 #	echo "python dw_data_parser.py xxx.csv"
 
 ################ check history file record by date ################
+# if record has same date, ignore it 
 def csv_date_check(f, date):
 	res=0
 	try:
@@ -20,9 +21,11 @@ def csv_date_check(f, date):
 		return res
 
 	f=open(f, 'r')
-	for his_data in csv.reader(f):
+	print "date " + str(date)
+	for his_data in csv.reader(f, delimiter=';' ):
+#		print "his_data[0]" + his_data[0]
 		if his_data[0] == str(date):
-			print "Record has inserted."
+			print "Record has be inserted."
 			res=-1
 	print "return 0"
 	f.close()
@@ -180,7 +183,6 @@ for nline_data in csv.reader(total_stock_file):
 				#			print "ascii string " + name 
 					continue
 			print "output " + stock_indep_file,
-			# print "output to ", stock_indep_file, 
 			try:
 				# if record has more than 16 elements
 				if csv_date_check(stock_indep_file, today) < 0:
@@ -194,7 +196,7 @@ for nline_data in csv.reader(total_stock_file):
 				if '' != today:
 					f.write( today + ';')
 
-				print "start to write"
+				print "write " + today
 				# information begins from 2nd element
 				for sec_idx in range(2, len(nline_data)):
 					# sperate with ";" not ','
