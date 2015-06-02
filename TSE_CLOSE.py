@@ -93,34 +93,36 @@ else:
 	else:
 		daynumMAX=1
 
-for i in range(1,daynumMAX):
-	yesterday = yesterday - timedelta(1)	
-
 # Check folder exist?
 cond1=os.path.exists(outPATH)
 if (not cond1):
 	try:
+		print( "try to make folder")
 		os.system('mkdir '+outPATH) 
 		cond1=1
 	except IOError as IOE :
 		print ('output folder (' +outPATH +' ) cant build')	 
 		cond1=0
+		exit()
 
-# Confirm output folder exist 
-if(cond1):
-	# Check output folder exist
-	outDST=outPATH+'/CLOSE/'
-	cond1A=os.path.exists(outDST)
-	if (not cond1A):
-		try:
-			os.system('mkdir '+outDST) 
-			cond1A=1
-		except IOError as IOE :
-			print ('output folder (' +outDST +') cant build')	 
-			cond1A=0
+# Check output folder exist
+outDST=outPATH+'/CLOSE/'
+cond1A=os.path.exists(outDST)
+if (not cond1A):
+	try:
+		os.system('mkdir '+outDST) 
+		cond1A=1
+	except IOError as IOE :
+		print ('output folder (' +outDST +') cant build')	 
+		cond1A=0
+		exit()
 
-	# count and begin to download 
-	for daynum in range(1,daynumMAX+1):			
+# count and begin to download 
+for daynum in range(1,daynumMAX+1):			
+	print ("check " + str(int(yesterday.strftime('%Y%m%d'))))
+
+	# Confirm output folder exist 
+	if(cond1):
 		# print (int(yesterday.strftime('%Y%m%d')))										
 		if( int(yesterday.strftime('%Y%m%d')) >= 20040211):
 			inputEntry = yesterday.strftime('%Y_%m_%d').split('_')
@@ -176,12 +178,11 @@ if(cond1):
 				condIDX=0
 			else:
 				print('Date : ('+yesterday.strftime('%Y%m%d')+') cant download')				 
-		# next day
-		yesterday = yesterday + timedelta(1)						 
-				
-else:
-	print('Output folder: ('+outPATH+') cant build')
-
+					
+		# discreament 1 day
+		yesterday = yesterday - timedelta(1)	
+	else:
+		print('Output folder: ('+outPATH+') cant build')
 
 # The end
 print('Close data download completion')
