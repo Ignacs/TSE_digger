@@ -17,7 +17,6 @@ def csv_date_check(f, date):
 	try:
 		os.stat(f)
 	except:	
-		print ""
 		return res
 
 	f=open(f, 'r')
@@ -25,9 +24,9 @@ def csv_date_check(f, date):
 	for his_data in csv.reader(f, delimiter=';' ):
 #		print "his_data[0]" + his_data[0]
 		if his_data[0] == str(date):
-			print "Record has be inserted."
+			# print "Record has be inserted."
 			res=-1
-	print "return 0"
+	# print "return 0"
 	f.close()
 	return res
 ################ check history file record by date ################
@@ -44,7 +43,7 @@ output_folder=str(sys.argv[2])
 try:
 	os.stat(output_folder)
 except:	
-	print "Not exist, try to create it."
+	print "Not exist, try to create it." + output_folder
 #	try :
 #		os.makedirs(output_folder)
 #	except:
@@ -94,22 +93,22 @@ for nline_data in csv.reader(total_stock_file):
 
 			if 'utf8' != str_encode:
 				if 'big5'!= str_encode:
-					print "ascii string " + name 
+					# print "ascii string " + name 
 					continue
 			
 
-			print "output " + stock_indep_file
+			# print "output " + stock_indep_file
 			# print "output to ", stock_indep_file, 
 			try:
 				# if record has more than 16 elements
 				if csv_date_check(stock_indep_file, today) < 0:
 					continue
-				print "begin to write"
+				# print "begin to write"
 
 				# output to file
 				f=open(stock_indep_file, "a+")
 
-				print "start to write"
+				# print "start to write"
 				# write date into file as first element 
 				if '' != today:
 					f.write( today + ';')
