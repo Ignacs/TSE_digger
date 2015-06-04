@@ -44,10 +44,11 @@ try:
 	os.stat(output_folder)
 except:	
 	print "Not exist, try to create it." + output_folder
-#	try :
-#		os.makedirs(output_folder)
-#	except:
-#		print "Failed to create it."
+	try :
+		os.makedirs(output_folder)
+	except:
+		print "Failed to create it."
+		sys.exit()
 
 total_stock_file = open(sys.argv[1], 'r')
 
