@@ -15,23 +15,34 @@ if len(sys.argv) < 3:
 ##########################################
 # main section
 # check CSV folder exist?
-if os.stat(str(sys.argv[1])):
-	print sys.argv[1] + "doesnt exist" 
+try :
+	os.stat(str(sys.argv[1]))
+except:
+	print sys.argv[1] + " doesnt exist" 
 	sys.exit()
 	
 # check db folder exist?
-if os.stat(str(sys.argv[2])):
-	print sys.argv[2] + "doesnt exist" 
-	sys.exit()
+try :
+	os.stat(str(sys.argv[2]))
+except:
+	print sys.argv[2] + " doesnt exist" 
+	print "try to make it "
+	try :
+		os.makedirs(sys.argv[2])
+	except:
+		print "Failed to create it."
+		sys.exit()
 
 print "Processing CSV folder " + sys.argv[1] + "..."
-print "Output db folder " + sys.argv[2] + "..."
+print "Output DB folder " + sys.argv[2] + "..."
 
 # through all CSV files
 os.chdir(str(sys.argv[1]))
 for csv_file in glob.glob("*"):
 	print ">>>>> handle " + csv_file + " <<<<<"
-	con = lite.connect(sys.argv[2] + csv_file + ".sl3")
+	db_name = sys.argv[2] + '/' + csv_file + ".sl3"
+	print "build database [" + db_name + "]"
+	con = lite.connect(db_name)
 	# "with" keyword will release resource autombatically and handle error.
 	with con:
 		cur = con.cursor()    
