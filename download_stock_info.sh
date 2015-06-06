@@ -6,6 +6,13 @@
 TODAY=`date +%y%m%d`
 
 echo $1 
+
+
+if [ ! -e /media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/TSE_daily_data ] ; then 
+	echo Error with download TSE data.	
+	exit
+fi 
+
 if [ ! "$1" == "debug" ] ; then
 	echo Normal mode 
 
