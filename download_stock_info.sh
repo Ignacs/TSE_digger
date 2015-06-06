@@ -6,12 +6,12 @@
 TODAY=`date +%y%m%d`
 
 echo $1 
-if [ "$1" == "debug" ] ; then
+if [ ! "$1" == "debug" ] ; then
 	echo Normal mode 
 
 	# 
-	python3.2 ~/roxbins/TSE_CLOSE.py 180 /media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/TSE_daily_data &>> /media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/TSE_daily_data/log_$TODAY.log
-	python3.2 ~/roxbins/OTC_CLOSE.py 180 /media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/OTC_daily_data &>> /media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/TSE_daily_data/log_$TODAY.log
+	python3.2 ~/roxbins/TSE_CLOSE.py 180 /media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/TSE_daily_data 
+	python3.2 ~/roxbins/OTC_CLOSE.py 180 /media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/OTC_daily_data 
 	 
 	for idx in $(seq 0 180 ) 
 	do 
