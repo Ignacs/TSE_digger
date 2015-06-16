@@ -10,8 +10,15 @@ echo "check $day_num(s)" >> ~/lab/log/dw_stock/$TODAY.log
 
 
 echo $1 
-if [ "$1" != "debug" ] ; then
-	echo "Normal mode ">> ~/lab/log/dw_stock/$TODAY.log
+
+# TODO: add file system check later
+# if [ ! -e /media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/TSE_daily_data ] ; then 
+# 	echo Error with download TSE data.	
+# 	exit
+# fi 
+# 
+if [ ! "$1" == "debug" ] ; then
+	echo Normal mode 
 
 	# 
 	python3.2 ~/roxbins/TSE_CLOSE.py  $day_num /media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/TSE_daily_data >> /media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/TSE_daily_data/log_$TODAY.log
