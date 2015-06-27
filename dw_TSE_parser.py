@@ -6,9 +6,10 @@ import os, sys, platform
 csv_line=0
 today=''
 era=''
-# 
-# def usage():
-#	echo "python dw_data_parser.py xxx.csv"
+################# Usage ################# 
+def usage():
+#	"python dw_data_parser.py xxx.csv"
+	print "python dw_data_parser.py (csv flle download from TSE) (ouptut foloder)" 
 
 ################ check history file record by date ################
 # if record has same date, ignore it 
@@ -30,11 +31,11 @@ def csv_date_check(f, date):
 	f.close()
 	return res
 ################ check history file record by date ################
-
+# check 
 # print "argv len : "+ str(len(sys.argv))
 if  3 > len(sys.argv):
 	print "Too few arguments."
-	print "python dw_data_parser.py (csv flle download from TSE) (ouptut foloder)" 
+	usage()
 	sys.exit()	
 
 output_folder=str(sys.argv[2])
@@ -80,14 +81,18 @@ for nline_data in csv.reader(total_stock_file):
 				# print name.decode('utf-8')
 
 				# output path
-				stock_indep_file = os.path.join(output_folder, sid + '_' + name.decode('utf-8') )
+				# Stop trying to use Chinese file name // Foxconn modify, Ignacs Wu, 2015/06/27 
+				# stock_indep_file = os.path.join(output_folder, sid + '_' + name.decode('utf-8') )
+				stock_indep_file = os.path.join(output_folder, sid  )
 				str_encode='utf8'
 			except:	
 				try: 
 					# print name.decode('big5')
 
 					# output path
-					stock_indep_file = os.path.join(output_folder, sid + '_' + name.decode('big5') )
+					# Stop trying to use Chinese file name // Foxconn modify, Ignacs Wu, 2015/06/27 
+					# stock_indep_file = os.path.join(output_folder, sid + '_' + name.decode('big5') )
+					stock_indep_file = os.path.join(output_folder, sid )
 					str_encode='big5'
 				except:
 					print 'cant handle name ' + sid # + ' not encode big5 '
@@ -166,13 +171,17 @@ for nline_data in csv.reader(total_stock_file):
 			try:
 				# print name.decode('utf-8')
 				# output path
-				stock_indep_file=os.path.join(output_folder, sid[start_idx:end_idx] + '_' + name.decode('utf-8') )
+				# Stop trying to use Chinese file name # // Foxconn add, Ignacs Wu, 2015/06/27 
+				# stock_indep_file=os.path.join(output_folder, sid[start_idx:end_idx] + '_' + name.decode('utf-8') )
+				stock_indep_file=os.path.join(output_folder, sid[start_idx:end_idx]  )
 				str_encode='utf8'
 			except:	
 				try: 
 					# print name.decode('big5')
 					# output path
-					stock_indep_file=os.path.join(output_folder, sid[start_idx:end_idx] + '_' + name.decode('big5') )
+					# Stop trying to use Chinese file name // Foxconn modify, Ignacs Wu, 2015/06/27 
+					# stock_indep_file=os.path.join(output_folder, sid[start_idx:end_idx] + '_' + name.decode('big5') )
+					stock_indep_file=os.path.join(output_folder, sid[start_idx:end_idx]  )
 					str_encode='big5'
 				except:
 					print 'cant handle name ' + sid # + ' not encode big5 '
@@ -241,5 +250,5 @@ for nline_data in csv.reader(total_stock_file):
 	#	print "too long to handle : [" + str(nline_data) + "]"
 		
 total_stock_file.close()
-
+sys.exit()
 
