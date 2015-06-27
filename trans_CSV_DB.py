@@ -2,6 +2,7 @@
 import csv
 import glob, os, sys, platform
 import sqlite3 as lite
+from os.path import basename
 
 con = None
 idx_fileCSV=1
@@ -41,10 +42,26 @@ print "Output DB folder " + sys.argv[idx_outputFolder]
 # through all CSV files
 os.chdir(str(sys.argv[idx_outputFolder]))
 # for csv_file in glob.glob("*"):
-csv_file=sys.argv[idx_fileCSV]
+# stock data CSV file
+csv_fpath=sys.argv[idx_fileCSV]
+csv_file = open(csv_fpath,'r' )
+csv_fn=basename(csv_fpath)
+print ">>>>> handle " + csv_fn + " <<<<<"
+# dont support non-stock id , debt of foreign stock  (more than 4 digit number) 
+# 
+#if len(csv_fn) > 7:
+#	if csv_fn[4].isdigit():
+#		print "But not accept ..."
+#		sys.exit()
+#if len(csv_fn) > 6:
+#	if csv_fn[4].isdigit():
+#		print "But not accept ..."
+#		sys.exit()
 
-print ">>>>> handle " + csv_file + " <<<<<"
-db_name = csv_file[0] + csv_file[1] + csv_file[2] + csv_file[3] + ".sl3"
+
+# putput database file name
+db_name = csv_fn[0] + csv_fn[1] + csv_fn[2] + csv_fn[3] + ".sl3"
+
 print "build database [" + db_name + "]"
 con = lite.connect(db_name)
 # "with" keyword will release resource autombatically and handle error.
@@ -73,8 +90,14 @@ with con:
 	# cur.execute("CREATE INDEX stock ON stock(title);
 
 	# Insert a row of data
-	cur.execute("INSERT INTO stock VALUES ('20150626','4926733','1336','346310265','70.45','70.45','70.15','70.45',' ','0','70.4','9','70.45','41','0.00')")
-
+	# csv_line = 0
+	for nline_data in csv.reader(csv_file, delimiter=';'):
+		# csv_line = csv_line+1
+		# print str(csv_line),
+		for idx in range(0, len(nline_data)):
+			date_line=str(nline_data[idx])
+		 	print '[' + str(idx) + ':' +  date_line + ']',
+			cur.execute("INSERT INTO stock VALUES ( '" + str(nline_data[0]) + "','" + str(nline_data[1]) + "','" + str(nline_data[2]) + "','" + str(nline_data[3]) + "','" + str(nline_data[4]) + "','" + str(nline_data[5]) + "','" + str(nline_data[6]) + "','" + str(nline_data[7]) + "','" + str(nline_data[8]) + "','" + str(nline_data[9]) + "','" + str(nline_data[10]) + "','" + str(nline_data[11]) + "','" + str(nline_data[12]) + "','" + str(nline_data[13]) + "','" + str(nline_data[14]) + "')" )
 
 	# Save (commit) the changes
 	# cur.commit()
@@ -82,3 +105,7 @@ with con:
 	# We can also close the connection if we are done with it.
 	# Just be sure any changes have been committed or they will be lost.
 	# cur.close()
+csv_file.close()
+sys.exit()
+
+
