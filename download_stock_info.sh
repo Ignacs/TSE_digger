@@ -5,8 +5,15 @@
 
 TODAY=`date +%y%m%d`
 day_num=180
-echo "$TODYA start" > ~/lab/log/dw_stock/$TODAY.log
-echo "check $day_num(s)" >> ~/lab/log/dw_stock/$TODAY.log
+TSE_data_folder=/media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/TSE_daily_data
+OTC_data_folder=/media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/OTC_daily_data
+Stock_data_folder=/media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/stock
+backup_folder=/media/data/stock_backup/
+
+log_file=~/lab/log/dw_stock/$TODAY.log
+
+echo "$TODYA start" > $log_file
+echo "check $day_num(s)" >> $log_file
 
 
 echo $1 
@@ -18,30 +25,26 @@ echo $1
 # fi 
 # 
 
-TSE_data_folder=/media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/TSE_daily_data
-OTC_data_folder=/media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/OTC_daily_data
-Stock_data_folder=/media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/stock
-backup_folder=/media/data/stock_backup/
-if [ ! "$1" == "debug" ] ; then
+if [ ! "$1" = "debug" ] ; then
 	echo Normal mode 
 
 	# 
-	python3.2 ~/roxbins/TSE_CLOSE.py  $day_num  $TSE_data_folder >> $TSE_data_folder/log_$TODAY.log
-	python3.2 ~/roxbins/OTC_CLOSE.py  $day_num  $OTC_data_folder >> $OTC_data_folder/log_$TODAY.log
+	python3.2 ~/roxbins/TSE_CLOSE.py  $day_num  $TSE_data_folder >> $log_file
+	python3.2 ~/roxbins/OTC_CLOSE.py  $day_num  $OTC_data_folder >> $log_file
 	 
 	for idx in $(seq 0 $day_num ) 
 	do 
 		CALD_DAY=`date '+%C%y%m%d' -d "$end_date-$idx days"`
-		echo " Handle $TSE_data_folder/CLOSE/$CALD_DAY.csv " >> $TSE_data_folder/$TODAY.log
+		echo " Handle $TSE_data_folder/CLOSE/$CALD_DAY.csv " >> $log_file
 
-		python ~/roxbins/dw_TSE_parser.py $TSE_data_folder/CLOSE/$CALD_DAY.csv $Stock_data_folder &>> $Stock_data_folder/$TODAY.log
+		python ~/roxbins/dw_TSE_parser.py $TSE_data_folder/CLOSE/$CALD_DAY.csv $Stock_data_folder &>> $log_file
 	done
 	
-	echo "Total $idx had check ">> ~/lab/log/dw_stock/$TODAY.log
+	echo "Total $idx had check ">> $log_file
 	
-	echo "Executed backup">> ~/lab/log/dw_stock/$TODAY.log
-	rsync -av  $TSE_data_folder $backup_folder >> $backup_folder/$TODAY.log
-	rsync -av $OTC_data_folder $backup_folder >>  $backup_folder/$TODAY.log
+	echo "Executed backup">> $log_file
+	rsync -av  $TSE_data_folder $backup_folder >> $log_file
+	rsync -av $OTC_data_folder $backup_folder >>  $log_file
 else 
 	echo "debug mode"
 	python3.2 TSE_CLOSE.py $day_num output/
