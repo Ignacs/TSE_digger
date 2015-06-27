@@ -94,10 +94,12 @@ with con:
 	for nline_data in csv.reader(csv_file, delimiter=';'):
 		# csv_line = csv_line+1
 		# print str(csv_line),
-		for idx in range(0, len(nline_data)):
-			date_line=str(nline_data[idx])
-		 	print '[' + str(idx) + ':' +  date_line + ']',
-			cur.execute("INSERT INTO stock VALUES ( '" + str(nline_data[0]) + "','" + str(nline_data[1]) + "','" + str(nline_data[2]) + "','" + str(nline_data[3]) + "','" + str(nline_data[4]) + "','" + str(nline_data[5]) + "','" + str(nline_data[6]) + "','" + str(nline_data[7]) + "','" + str(nline_data[8]) + "','" + str(nline_data[9]) + "','" + str(nline_data[10]) + "','" + str(nline_data[11]) + "','" + str(nline_data[12]) + "','" + str(nline_data[13]) + "','" + str(nline_data[14]) + "')" )
+		# for idx in range(0, len(nline_data)):
+		#	date_line=str(nline_data[idx])
+		# 	print '[' + str(idx) + ':' +  date_line + ']',
+		cur.execute("INSERT INTO stock VALUES ( '" + str(nline_data[0]) + "','" + str(nline_data[1]) + "','" + str(nline_data[2]) + "','" + str(nline_data[3]) + "','" + str(nline_data[4]) + "','" + str(nline_data[5]) + "','" + str(nline_data[6]) + "','" + str(nline_data[7]) + "','" + str(nline_data[8]) + "','" + str(nline_data[9]) + "','" + str(nline_data[10]) + "','" + str(nline_data[11]) + "','" + str(nline_data[12]) + "','" + str(nline_data[13]) + "','" + str(nline_data[14]) + "')" )
+
+	#	print ""
 
 	# Save (commit) the changes
 	# cur.commit()
