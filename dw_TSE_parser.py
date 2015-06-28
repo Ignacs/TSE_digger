@@ -121,7 +121,7 @@ for nline_data in csv.reader(total_stock_file):
 				# information begins from 2nd element
 				for sec_idx in range(2, len(nline_data)):
 					# sperate with ";" not ','
-					f.write(str(nline_data[sec_idx]) )
+					f.write(str(nline_data[sec_idx]).replace(',', "") )
 					if 15 != sec_idx:
 						f.write(";")
 					elif 15 == sec_idx:
@@ -208,7 +208,7 @@ for nline_data in csv.reader(total_stock_file):
 				# information begins from 2nd element
 				for sec_idx in range(2, len(nline_data)):
 					# sperate with ";" not ','
-					f.write(str(nline_data[sec_idx]) )
+					f.write(str(nline_data[sec_idx]).replace(',', "") )
 					if 15 != sec_idx:
 						f.write(";")
 					elif 15 == sec_idx:
