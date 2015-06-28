@@ -8,6 +8,7 @@ day_num=180
 TSE_data_folder=/media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/TSE_daily_data
 OTC_data_folder=/media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/OTC_daily_data
 Stock_data_folder=/media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/stock
+Database_folder=/media/493742f3-57ea-4deb-8a89-975caf65f8ee/lab/stock_database
 backup_folder=/media/data/stock_backup/
 
 log_file=~/lab/log/dw_stock/$TODAY.log
@@ -40,11 +41,16 @@ if [ ! "$1" = "debug" ] ; then
 		python ~/roxbins/dw_TSE_parser.py $TSE_data_folder/CLOSE/$CALD_DAY.csv $Stock_data_folder &>> $log_file
 	done
 	
+	~/roxbins/build_DB.sh	>> $log_file
+	
 	echo "Total $idx had check ">> $log_file
 	
 	echo "Executed backup">> $log_file
 	rsync -av  $TSE_data_folder $backup_folder >> $log_file
 	rsync -av $OTC_data_folder $backup_folder >>  $log_file
+	rsync -av $Stock_data_folder $backup_folder >>  $log_file
+	rsync -av $Database_folder $backup_folder >>  $log_file
+
 else 
 	echo "debug mode"
 	python3.2 TSE_CLOSE.py $day_num output/
