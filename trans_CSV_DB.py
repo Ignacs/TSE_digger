@@ -7,6 +7,25 @@ from os.path import basename
 con = None
 idx_fileCSV=1
 idx_outputFolder=2
+db_postfix=".sl3"
+ 
+# "ら戳","Θユ计","Θユ掸计","Θユ肂","秨絃基","程蔼基","程基","Μ絃基","害禴(+/-)","害禴基畉","程处ボ禦基","程处ボ禦秖","程处ボ芥基","程处ボ芥秖","セ痲ゑ"
+item_list = [ 
+	'idx_Date',
+	'idx_Stock_number',
+	'idx_Deal_volumn',
+	'idx_Deal_money',
+	'idx_Open',
+	'idx_HIGHEST',
+	'idx_LOWEST',
+	'idx_CLOSE',
+	'idx_Diff_sign', # ignore 
+	'idx_Diff', # ignore diff # calculate by close[n] and close[n+1]
+	'idx_Bid_price',
+	'idx_BUY_VOL',
+	'idx_SELL_price',
+	'idx_SELL_VOL',
+	'idx_PE' ]
 
 ##########################################
 # arguments check 
@@ -60,7 +79,7 @@ print ">>>>> handle " + csv_fn + " <<<<<"
 
 
 # putput database file name
-db_name = csv_fn[0] + csv_fn[1] + csv_fn[2] + csv_fn[3] + ".sl3"
+db_name = csv_fn[0] + csv_fn[1] + csv_fn[2] + csv_fn[3] + db_postfix
 
 print "build database [" + db_name + "]"
 con = lite.connect(db_name)
@@ -68,22 +87,20 @@ con = lite.connect(db_name)
 with con:
 	cur = con.cursor()    
 	# table format 
-	# "ら戳","Θユ计","Θユ掸计","Θユ肂","秨絃基","程蔼基","程基","Μ絃基","害禴(+/-)","害禴基畉","程处ボ禦基","程处ボ禦秖","程处ボ芥基","程处ボ芥秖","セ痲ゑ"
+	# "ら戳","Θユ计","Θユ掸计","Θユ肂","秨絃基","程蔼基","程基","Μ絃基","程处ボ禦基","程处ボ禦秖","程处ボ芥基","程处ボ芥秖","セ痲ゑ"
 	# cur.execute("DROP TABLE IF EXISTS " + str(db_name))
 	cur.execute(''' CREATE TABLE IF NOT EXISTS stock (
 			Date INT,
 			Stock_number INT, 
-			volumn INT,
-			Trade_money INT,
+			Deal_volumn INT,
+			Deal_money INT,
 			Open REAL, 
 			HIGHEST REAL,
 			LOWEST REAL,
 			CLOSE REAL,
-			UP_DOWN TEXT, 
-			DIFF REAL,
-			BUY REAL, 
+			BID_PRICE REAL, 
 			BUY_VOL INT, 
-			SELL REAL,
+			SELL_PRICE REAL,
 			SELL_VOL INT,
 			PE INT)''')
 	# create INDEX for speed-up quary
@@ -97,16 +114,19 @@ with con:
 		# for idx in range(0, len(nline_data)):
 		#	date_line=str(nline_data[idx])
 		# 	print '[' + str(idx) + ':' +  date_line + ']',
-		cur.execute("INSERT INTO stock VALUES ( '" + str(nline_data[0]) + "','" + str(nline_data[1]) + "','" + str(nline_data[2]) + "','" + str(nline_data[3]) + "','" + str(nline_data[4]) + "','" + str(nline_data[5]) + "','" + str(nline_data[6]) + "','" + str(nline_data[7]) + "','" + str(nline_data[8]) + "','" + str(nline_data[9]) + "','" + str(nline_data[10]) + "','" + str(nline_data[11]) + "','" + str(nline_data[12]) + "','" + str(nline_data[13]) + "','" + str(nline_data[14]) + "')" )
+		cur.execute("INSERT INTO stock VALUES ( '" + str(nline_data[item_list.index('idx_Date')]) + "','" + str(nline_data[item_list.index('idx_Stock_number')]) + "','" + str(nline_data[item_list.index('idx_Deal_volumn')]) + "','" + str(nline_data[item_list.index('idx_Deal_money')]) + "','" + str(nline_data[item_list.index('idx_Open')]) + "','" + str(nline_data[item_list.index('idx_HIGHEST')]) + "','" + str(nline_data[item_list.index('idx_LOWEST')]) + "','" + str(nline_data[item_list.index('idx_CLOSE')]) + "','" + str(nline_data[item_list.index('idx_Bid_price')]) + "','" + str(nline_data[item_list.index('idx_BUY_VOL')]) + "','" + str(nline_data[item_list.index('idx_SELL_price')]) + "','" + str(nline_data[item_list.index('idx_SELL_VOL') ]) + "','" + str(nline_data[item_list.index('idx_PE')]) + "')" )
 
+	# cur.execute("select * from stock where date = " + str(nline_data[0]) ):
+	# cur.execute("select * from stock where date=20150628" ):
+	# cur.execute("SELECT * FROM stock ")
 	#	print ""
 
 	# Save (commit) the changes
-	# cur.commit()
+	con.commit()
 
 	# We can also close the connection if we are done with it.
 	# Just be sure any changes have been committed or they will be lost.
-	# cur.close()
+	# con.close()
 csv_file.close()
 sys.exit()
 
