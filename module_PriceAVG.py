@@ -59,23 +59,25 @@ Query_item=[
 with con:
 	cur = con.cursor()    
 
-	print "Show short-term data" + str(short_calDateNum)
-	for record in cur.execute("select " + Query_item[0] + "," + Query_item[1] + " from stock order by Date desc limit " + str(short_calDateNum)):
-		shortPriceAVG = shortPriceAVG + record[1] 
-	shortPriceAVG = shortPriceAVG/short_calDateNum
-	print "Short AVG : " + str(round(shortPriceAVG,2))
+	for offsetDay in range(0, 30):
+		cur.execute("select " + Query_item[0] + " from stock order by Date desc limit 1 offset " + str(offsetDay))
+		record=cur.fetchone()
+		print record[0], 
 
-	print "Show mid-term data" + str(mid_calDateNum)
-	for record in cur.execute("select " + Query_item[0] + "," + Query_item[1] + " from stock order by Date desc limit " + str(mid_calDateNum)):
-		midPriceAVG = midPriceAVG + record[1] 
-	midPriceAVG = midPriceAVG/mid_calDateNum
-	print "Mid AVG : " + str(round(midPriceAVG,2))
+		for record in cur.execute("select " + Query_item[1] + " from stock order by Date desc limit " + str(short_calDateNum) + " offset " + str(offsetDay)):
+			shortPriceAVG = shortPriceAVG + record[0] 
+		shortPriceAVG = shortPriceAVG/short_calDateNum
+		print "%.2f" % round(shortPriceAVG,2),
 
-	print "Show long-term data" + str(long_calDateNum)
-	for record in cur.execute("select " + Query_item[0] + "," + Query_item[1] + " from stock order by Date desc limit " + str(long_calDateNum)):
-		longPriceAVG = longPriceAVG + record[1] 
-	longPriceAVG = longPriceAVG/long_calDateNum
-	print "Long AVG : " + str(round(longPriceAVG, 2))
+		for record in cur.execute("select " + Query_item[1] + " from stock order by Date desc limit " + str(mid_calDateNum) + " offset " + str(offsetDay)):
+			midPriceAVG = midPriceAVG + record[0] 
+		midPriceAVG = midPriceAVG/mid_calDateNum
+		print "%.2f" % round(midPriceAVG,2),
+
+		for record in cur.execute("select " + Query_item[1] + " from stock order by Date desc limit " + str(long_calDateNum) + " offset " + str(offsetDay)):
+			longPriceAVG = longPriceAVG + record[0] 
+		longPriceAVG = longPriceAVG/long_calDateNum
+		print "%.2f" % round(longPriceAVG, 2)
 
 	# cur.execute("select * from stock where date = " + str(nline_data[0]) ):
 	# cur.execute("select * from stock where date=20150628" ):
