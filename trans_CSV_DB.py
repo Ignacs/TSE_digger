@@ -35,7 +35,7 @@ if len(sys.argv) < 3:
 	sys.exit(1)
 
 ##########################################
-# check CSV folder exist?
+# check CSV file exist?
 try :
 	os.stat(str(sys.argv[idx_fileCSV]))
 except:
