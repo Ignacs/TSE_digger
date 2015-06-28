@@ -120,9 +120,9 @@ with con:
 
 		if sql_exe_resulte is None:
 			cur.execute("INSERT INTO stock VALUES ( '" + str(nline_data[item_list.index('idx_Date')]) + "','" + str(nline_data[item_list.index('idx_Stock_number')]) + "','" + str(nline_data[item_list.index('idx_Deal_volumn')]) + "','" + str(nline_data[item_list.index('idx_Deal_money')]) + "','" + str(nline_data[item_list.index('idx_Open')]) + "','" + str(nline_data[item_list.index('idx_HIGHEST')]) + "','" + str(nline_data[item_list.index('idx_LOWEST')]) + "','" + str(nline_data[item_list.index('idx_CLOSE')]) + "','" + str(nline_data[item_list.index('idx_Bid_price')]) + "','" + str(nline_data[item_list.index('idx_BUY_VOL')]) + "','" + str(nline_data[item_list.index('idx_SELL_price')]) + "','" + str(nline_data[item_list.index('idx_SELL_VOL') ]) + "','" + str(nline_data[item_list.index('idx_PE')]) + "')" )
-			print "The date " +  str(nline_data[item_list.index('idx_Date')]) + " had be inserted."
-		else :
-			print "The date " +  str(nline_data[item_list.index('idx_Date')]) + " exists."
+			# print "The date " +  str(nline_data[item_list.index('idx_Date')]) + " had be inserted."
+		# else :
+		#	print "The date " +  str(nline_data[item_list.index('idx_Date')]) + " exists."
 
 	# cur.execute("select * from stock where date = " + str(nline_data[0]) ):
 	# cur.execute("select * from stock where date=20150628" ):
