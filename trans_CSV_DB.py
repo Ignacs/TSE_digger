@@ -81,7 +81,7 @@ print ">>>>> handle " + csv_fn + " <<<<<"
 # putput database file name
 db_name = csv_fn[0] + csv_fn[1] + csv_fn[2] + csv_fn[3] + db_postfix
 
-print "build database [" + db_name + "]"
+print "Open database [" + db_name + "]"
 con = lite.connect(db_name)
 # "with" keyword will release resource autombatically and handle error.
 with con:
@@ -114,7 +114,16 @@ with con:
 		# for idx in range(0, len(nline_data)):
 		#	date_line=str(nline_data[idx])
 		# 	print '[' + str(idx) + ':' +  date_line + ']',
-		cur.execute("INSERT INTO stock VALUES ( '" + str(nline_data[item_list.index('idx_Date')]) + "','" + str(nline_data[item_list.index('idx_Stock_number')]) + "','" + str(nline_data[item_list.index('idx_Deal_volumn')]) + "','" + str(nline_data[item_list.index('idx_Deal_money')]) + "','" + str(nline_data[item_list.index('idx_Open')]) + "','" + str(nline_data[item_list.index('idx_HIGHEST')]) + "','" + str(nline_data[item_list.index('idx_LOWEST')]) + "','" + str(nline_data[item_list.index('idx_CLOSE')]) + "','" + str(nline_data[item_list.index('idx_Bid_price')]) + "','" + str(nline_data[item_list.index('idx_BUY_VOL')]) + "','" + str(nline_data[item_list.index('idx_SELL_price')]) + "','" + str(nline_data[item_list.index('idx_SELL_VOL') ]) + "','" + str(nline_data[item_list.index('idx_PE')]) + "')" )
+
+		# find date that read from CSV file if it exists in Database
+		cur.execute("select * from stock where Date = " + str(nline_data[item_list.index('idx_Date')]))
+		sql_exe_resulte=cur.fetchone()
+
+		if sql_exe_resulte is None:
+			cur.execute("INSERT INTO stock VALUES ( '" + str(nline_data[item_list.index('idx_Date')]) + "','" + str(nline_data[item_list.index('idx_Stock_number')]) + "','" + str(nline_data[item_list.index('idx_Deal_volumn')]) + "','" + str(nline_data[item_list.index('idx_Deal_money')]) + "','" + str(nline_data[item_list.index('idx_Open')]) + "','" + str(nline_data[item_list.index('idx_HIGHEST')]) + "','" + str(nline_data[item_list.index('idx_LOWEST')]) + "','" + str(nline_data[item_list.index('idx_CLOSE')]) + "','" + str(nline_data[item_list.index('idx_Bid_price')]) + "','" + str(nline_data[item_list.index('idx_BUY_VOL')]) + "','" + str(nline_data[item_list.index('idx_SELL_price')]) + "','" + str(nline_data[item_list.index('idx_SELL_VOL') ]) + "','" + str(nline_data[item_list.index('idx_PE')]) + "')" )
+			print "The date " +  str(nline_data[item_list.index('idx_Date')]) + " had be inserted."
+		else :
+			print "The date " +  str(nline_data[item_list.index('idx_Date')]) + " exists."
 
 	# cur.execute("select * from stock where date = " + str(nline_data[0]) ):
 	# cur.execute("select * from stock where date=20150628" ):
