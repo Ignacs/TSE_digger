@@ -26,38 +26,43 @@ echo $1
 # fi 
 # 
 
+echo "==================== Start ====================" >> $log_file
+date >> $log_file
 if [ ! "$1" = "debug" ] ; then
-	echo Normal mode 
-
-	# 
-	python3.2 ~/roxbins/TSE_CLOSE.py  $day_num  $TSE_data_folder >> $log_file
-	python3.2 ~/roxbins/OTC_CLOSE.py  $day_num  $OTC_data_folder >> $log_file
-	 
-	for idx in $(seq 0 $day_num ) 
-	do 
-		CALD_DAY=`date '+%C%y%m%d' -d "$end_date-$idx days"`
-		echo " Handle $TSE_data_folder/CLOSE/$CALD_DAY.csv " >> $log_file
-
-		python ~/roxbins/dw_TSE_parser.py $TSE_data_folder/CLOSE/$CALD_DAY.csv $Stock_data_folder &>> $log_file
-	done
-	
-	~/roxbins/build_DB.sh	>> $log_file
-	
-	echo "Total $idx had check ">> $log_file
-	
-	echo "Executed backup">> $log_file
-	rsync -av  $TSE_data_folder $backup_folder >> $log_file
-	rsync -av $OTC_data_folder $backup_folder >>  $log_file
-	rsync -av $Stock_data_folder $backup_folder >>  $log_file
-	rsync -av $Database_folder $backup_folder >>  $log_file
-
+ 	echo "Normal mode ">> $log_file
+ 
+ 
+ 	# 
+ 	python3.2 ~/roxbins/TSE_CLOSE.py  $day_num  $TSE_data_folder >> $log_file
+ 	python3.2 ~/roxbins/OTC_CLOSE.py  $day_num  $OTC_data_folder >> $log_file
+ 	 
+ 	for idx in $(seq 0 $day_num ) 
+ 	do 
+ 		CALD_DAY=`date '+%C%y%m%d' -d "$end_date-$idx days"`
+ 		echo " Handle $TSE_data_folder/CLOSE/$CALD_DAY.csv " >> $log_file
+ 
+ 		python ~/roxbins/dw_TSE_parser.py $TSE_data_folder/CLOSE/$CALD_DAY.csv $Stock_data_folder &>> $log_file
+ 	done
+ 	
+ 	~/roxbins/build_DB.sh	>> $log_file
+ 	
+ 	echo "Total $idx had check ">> $log_file
+ 	
+ 	echo "Executed backup">> $log_file
+ 	rsync -av  $TSE_data_folder $backup_folder >> $log_file
+ 	rsync -av $OTC_data_folder $backup_folder >>  $log_file
+ 	rsync -av $Stock_data_folder $backup_folder >>  $log_file
+ 	rsync -av $Database_folder $backup_folder >>  $log_file
+ 
 else 
-	echo "debug mode"
-	python3.2 TSE_CLOSE.py $day_num output/
-	 
-	for idx in $(seq 0 $day_num ) 
-	do 
-		CALD_DAY=`date '+%C%y%m%d' -d "$end_date-$idx days"`
-		python dw_TSE_parser.py ./output/$CALD_DAY.csv output/
-	done
+ 	echo "debug mode"
+ 	python3.2 TSE_CLOSE.py $day_num output/
+ 	 
+ 	for idx in $(seq 0 $day_num ) 
+ 	do 
+ 		CALD_DAY=`date '+%C%y%m%d' -d "$end_date-$idx days"`
+ 		python dw_TSE_parser.py ./output/$CALD_DAY.csv output/
+ 	done
 fi 
+date >> $log_file
+echo "==================== End ====================" >> $log_file
