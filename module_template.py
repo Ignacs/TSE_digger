@@ -11,15 +11,16 @@ con = None
 idx_DB=1
 db_postfix=".sl3"
  
+# length of indicator 
+long_calDateNum=108
+mid_calDateNum=36
+short_calDateNum=12
+
 ############### module function #####################
 def module_temp(db_fpath):
 	print "Processing DB " + db_fpath 
 
 	con = lite.connect(db_fpath)
-
-	long_calDateNum=108
-	mid_calDateNum=36
-	short_calDateNum=12
 
 # table format 
 #		Date INT,
@@ -70,18 +71,18 @@ def module_temp(db_fpath):
 
 ##########################################
 # arguments check 
-#if len(sys.argv) < 2:
-#	print "Too few arguments. Usage:"
-#	print "python module_PriceAVG.py (database file)"
-#	sys.exit(1)
+if len(sys.argv) < 2:
+	print "Too few arguments. Usage:"
+	print "python module_PriceAVG.py (database file)"
+	sys.exit(1)
 
 ##########################################
 # check DB exist?
-#try :
-#	os.stat(str(sys.argv[idx_DB]))
-#except:
-#	print sys.argv[idx_DB] + " doesnt exist" 
-#	sys.exit()
+try :
+	os.stat(str(sys.argv[idx_DB]))
+except:
+	print sys.argv[idx_DB] + " doesnt exist" 
+	sys.exit()
 	
 for i in range(len(sys.argv)):
 	print str(i) + " ", 
