@@ -32,10 +32,15 @@ if [ ! "$1" = "debug" ] ; then
  	echo "Normal mode ">> $log_file
  
  
- 	# 
+ 	# download from TSE website 
  	python3.2 ~/roxbins/TSE_CLOSE.py  $day_num  $TSE_data_folder >> $log_file
  	python3.2 ~/roxbins/OTC_CLOSE.py  $day_num  $OTC_data_folder >> $log_file
- 	 
+
+	# remove temp file
+	rm $TSE_data_folder/CLOSE/*~ 
+	rm $OTC_data_folder/CLOSE/*~ 
+
+	# handle TSE data
  	for idx in $(seq 0 $day_num ) 
  	do 
  		CALD_DAY=`date '+%C%y%m%d' -d "$end_date-$idx days"`
@@ -43,7 +48,12 @@ if [ ! "$1" = "debug" ] ; then
  
  		python ~/roxbins/dw_TSE_parser.py $TSE_data_folder/CLOSE/$CALD_DAY.csv $Stock_data_folder &>> $log_file
  	done
- 	
+
+	# TODO: handle OTC data
+
+	# remove temp file
+	rm $Stock_data_folder/*~ 
+
  	~/roxbins/build_DB.sh	>> $log_file
  	
  	echo "Total $idx had check ">> $log_file
