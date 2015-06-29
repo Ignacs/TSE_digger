@@ -8,7 +8,6 @@ import sqlite3 as lite
 from os.path import basename
 
 con = None
-idx_DB=1
 db_postfix=".sl3"
  
 # length of indicator 
@@ -17,34 +16,35 @@ mid_calDateNum=36
 short_calDateNum=12
 
 ############### module function #####################
-def module_temp(db_fpath):
+def module_func(db_fpath):
 	print "Processing DB " + db_fpath 
+	global long_calDateNum, mid_calDateNum, short_calDateNum
 
 	con = lite.connect(db_fpath)
 
-# table format 
-#		Date INT,
-#		Stock_number INT, 
-#		Deal_volumn INT,
-#		Deal_money INT,
-#		Open REAL, 
-#		HIGHEST REAL,
-#		LOWEST REAL,
-#		CLOSE REAL,
-#		BID_PRICE REAL, 
-#		BUY_VOL INT, 
-#		SELL_PRICE REAL,
-#		SELL_VOL INT,
-#		PE INT
+	# table format 
+	#		Date INT,
+	#		Stock_number INT, 
+	#		Deal_volumn INT,
+	#		Deal_money INT,
+	#		Open REAL, 
+	#		HIGHEST REAL,
+	#		LOWEST REAL,
+	#		CLOSE REAL,
+	#		BID_PRICE REAL, 
+	#		BUY_VOL INT, 
+	#		SELL_PRICE REAL,
+	#		SELL_VOL INT,
+	#		PE INT
 
-# The element to query
+	# The element to query
 	Query_item=[
 		'Date',
 		'HIGHEST',
 		'LOWEST',
 		'CLOSE']
 
-# "with" keyword will release resource autombatically and handle error.
+	# "with" keyword will release resource autombatically and handle error.
 	with con:
 		cur = con.cursor()    
 
@@ -69,25 +69,30 @@ def module_temp(db_fpath):
 		#	print ""
 		return 
 
-##########################################
-# arguments check 
-if len(sys.argv) < 2:
-	print "Too few arguments. Usage:"
-	print "python module_PriceAVG.py (database file)"
-	sys.exit(1)
-
-##########################################
-# check DB exist?
-try :
-	os.stat(str(sys.argv[idx_DB]))
-except:
-	print sys.argv[idx_DB] + " doesnt exist" 
-	sys.exit()
-	
-for i in range(len(sys.argv)):
-	print str(i) + " ", 
-	print sys.argv[i]
-
-module_temp(sys.argv[i])
-
-sys.exit()
+# call by itself
+#if __name__ == '__main__':
+#	idx_DB=1
+#	##########################################
+#	# arguments check 
+#	if len(sys.argv) < 2:
+#		print "Too few arguments. Usage:"
+#		print "python module_template.py (database file)"
+#		sys.exit(1)
+#
+#	##########################################
+#	# check DB exist?
+#	try :
+#		os.stat(str(sys.argv[idx_DB]))
+#	except:
+#		print sys.argv[idx_DB] + " doesnt exist" 
+#		sys.exit()
+#	module_func(sys.argv[idx_DB])
+#		
+## call by others 
+#else:
+#	idx_DB=0
+#
+#	sys.argv[idx_DB]
+#	module_func(sys.argv[idx_DB])
+#
+# sys.exit()

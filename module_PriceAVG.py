@@ -4,8 +4,7 @@ import sqlite3 as lite
 from os.path import basename
 
 con = None
-idx_DB=1
-db_postfix=".sl3"
+# db_postfix=".sl3"
  
 # length of indicator 
 long_calDateNum=108
@@ -73,22 +72,32 @@ def module_func(db_fpath):
 		# cur.execute("SELECT * FROM stock ")
 		#	print ""
 
-##########################################
-# arguments check 
-if len(sys.argv) < 2:
-	print "Too few arguments. Usage:"
-	print "python module_PriceAVG.py (database file)"
-	sys.exit(1)
+# call by itself
+if __name__ == '__main__':
+	idx_DB=1
+	##########################################
+	# arguments check 
+	if len(sys.argv) < 2:
+		print "Too few arguments. Usage:"
+		print "python module_PriceAVG.py (database file)"
+		sys.exit(1)
 
-##########################################
-# check DB exist?
-try :
-	os.stat(str(sys.argv[idx_DB]))
-except:
-	print sys.argv[idx_DB] + " doesnt exist" 
-	sys.exit()
+	##########################################
+	# check DB exist?
+	try :
+		os.stat(str(sys.argv[idx_DB]))
+	except:
+		print sys.argv[idx_DB] + " doesnt exist" 
+		sys.exit()
+# call by others 
+	module_func(sys.argv[idx_DB])
+else:
 
-module_func(sys.argv[idx_DB])
+	idx_DB=0
+	print '\nhandle ' + sys.argv[0] + '\n'
+	module_func()
+
+
 
 sys.exit()
 
