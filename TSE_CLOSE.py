@@ -64,6 +64,7 @@ def dw_CSV_from_URL( TAI_Y, MM , DD , output_file):
 
 	if	condIDX:
 		print('	[Info] '+ output_file + ' download complete')
+		condIDX=1
 	else: 
 		print("	[Warning] :("+YYYY+MM+DD+") is not a trade day")	
 		condIDX=0					
