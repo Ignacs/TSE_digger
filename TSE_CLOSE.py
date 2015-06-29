@@ -157,7 +157,7 @@ for daynum in range(1,daynumMAX+1):
 			# daily close
 			condIDX=0
 			# strTSEIDX1=strURL1A+YYYY+MM+'/A112'+YYYY+MM+DD+strURL1B+YYYY1+'/'+MM+'/'+DD
-			strDSTIDX1=outDST+YYYY+MM+DD+'.csv'
+			strDSTIDX1=outDST+"/"+YYYY+MM+DD+'.csv'
 			Cond2 = os.path.exists(strDSTIDX1)
 
 			# if file has not exist 
