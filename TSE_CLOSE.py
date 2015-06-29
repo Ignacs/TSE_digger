@@ -7,6 +7,9 @@ import datetime
 from datetime import datetime, timedelta
 import re
 
+# usage 
+#	python TSE_CLOSE.py 1
+#####################################################
 # format 1
 # strURL1A='http://www.twse.com.tw/ch/trading/exchange/MI_INDEX/genpage/Report'
 # strURL1B='ALLBUT0999_1.php?select2=ALLBUT0999&chk_date='
@@ -30,17 +33,17 @@ req_values = {'download' : 'csv',
 	'selectType' : 'ALLBUT0999' }
 
 
-############### End of function ###############
+############### begin of function ###############
 # Des: down CSV from specified URL 
 #
 def dw_CSV_from_URL( TAI_Y, MM , DD , output_file):
-	print ("download " + TAI_Y + MM + DD ) 
+	print ("[Info]download " + TAI_Y + MM + DD ) 
 	condIDX=0
 	for retryCount in range(0,3):
 		try:
 			time.sleep(0.2)	
 			req_values['qdate'] = TAI_Y + '/' + MM + '/' + DD 
-			print (req_values['qdate'])
+			print ("[Info]" + str(req_values['qdate']))
 			
 			# new method to download
 			data = urllib.parse.urlencode(req_values)
@@ -57,20 +60,21 @@ def dw_CSV_from_URL( TAI_Y, MM , DD , output_file):
 		except IOError as IOE :
 			time.sleep(2)	 
 			condIDX=0
-			print ('Connect error: try',retryCount)	
+			print ('[Error] Connect error: try',retryCount)	
 
 	if	condIDX:
-		print('	(1): '+ output_file + ' download complete')
-		print(condIDX)
+		print('	[Info] '+ output_file + ' download complete')
 	else: 
-		print("	Warning :("+YYYY+MM+DD+") is not a trade day")	
+		print("	[Warning] :("+YYYY+MM+DD+") is not a trade day")	
 		condIDX=0					
 
 	return condIDX
 ############### End of function ###############
 
+
+# (python script name) + (day number) + (output folder)
 if 3 > len(sys.argv):
-	print ("Too few arguments")
+	print ("[Error] Too few arguments")
 	sys.exit(-1)
 
 # get date, and count total days to output always from today
@@ -80,10 +84,10 @@ autoentry=today.strftime('%Y_%m_%d').split('_')
 TAIYYYY1=int(autoentry[0])-1911
 
 # Show download from which day
-print ('[Start form ' + str(today) + ']')
+print ('[Info][Start form ' + str(today) + ']')
 
-dayback = sys.argv[1]	 # How many day to download (count from today)
-outPATH= sys.argv[2]	# Output folder
+dayback = sys.argv[1]	# How many day to download (count from today)
+outPATH = sys.argv[2]	# Output folder
 
 if dayback=='':
 	daynumMAX=1
@@ -97,11 +101,11 @@ else:
 cond1=os.path.exists(outPATH)
 if (not cond1):
 	try:
-		print( "try to make folder")
+		print( "[Warning] try to make folder")
 		os.system('mkdir '+outPATH) 
 		cond1=1
 	except IOError as IOE :
-		print ('output folder (' +outPATH +' ) cant build')	 
+		print ('[Error] output folder (' +outPATH +' ) cant build')	 
 		cond1=0
 		exit()
 
@@ -113,13 +117,13 @@ if (not cond1A):
 		os.system('mkdir '+outDST) 
 		cond1A=1
 	except IOError as IOE :
-		print ('output folder (' +outDST +') cant build')	 
+		print ('[Error] output folder (' +outDST +') cant build')	 
 		cond1A=0
 		exit()
 
 # count and begin to download 
 for daynum in range(1,daynumMAX+1):			
-	print ("check " + str(int(yesterday.strftime('%Y%m%d'))))
+	print ("[Info] check " + str(int(yesterday.strftime('%Y%m%d'))))
 
 	# Confirm output folder exist 
 	if(cond1):
@@ -153,7 +157,7 @@ for daynum in range(1,daynumMAX+1):
 					else:
 						YYYY1='%04d'%(TAIYYYY1)		
 
-			print('\n ============ (%04d'%daynum+'/%04d'%daynumMAX+'):'+YYYY+MM+DD+' start ============')
+			print('\n [Info] ============ (%04d'%daynum+'/%04d'%daynumMAX+'):'+YYYY+MM+DD+' start ============')
 			# daily close
 			condIDX=0
 			# strTSEIDX1=strURL1A+YYYY+MM+'/A112'+YYYY+MM+DD+strURL1B+YYYY1+'/'+MM+'/'+DD
@@ -162,28 +166,27 @@ for daynum in range(1,daynumMAX+1):
 
 			# if file has not exist 
 			if not Cond2:							
-				print ('Connection')	
+				print ('[Info] Connection')	
 				condIDX = dw_CSV_from_URL( str(TAIYYYY1) , MM , DD, strDSTIDX1)
+				# script got a file and too small than 2048 bytes
+				if (condIDX and os.path.getsize(strDSTIDX1) <=2048):
+					print("	[Warning] ("+strDSTIDX1+") is not a valid file， ("+YYYY+MM+DD+") is not a trade day\n")
+					# remove file and retry
+					# dont Remove IT, thus script will remove again...
+					# os.remove(strDSTIDX1) 
+					condIDX=0
+				else:
+					print('[Warning] Date : ('+yesterday.strftime('%Y%m%d')+') cant download')				 
 			else: # if file exists
 				condIDX=1
-				print(strDSTIDX1+" already exist")			 
-				continue
+				print("[Warning] " + strDSTIDX1+" already exist")			 
 				 
-			# script got a file and too small than 2048 bytes
-			if (condIDX and os.path.getsize(strDSTIDX1) <=2048):
-				print("	Warning ("+strDSTIDX1+") is not a valid file， ("+YYYY+MM+DD+") is not a trade day\n")
-				# remove file and retry
-				# dont Remove IT, thus script will remove again...
-				# os.remove(strDSTIDX1) 
-				condIDX=0
-			else:
-				print('Date : ('+yesterday.strftime('%Y%m%d')+') cant download')				 
 					
 		# discreament 1 day
 		yesterday = yesterday - timedelta(1)	
 	else:
-		print('Output folder: ('+outPATH+') cant build')
+		print('[Error] Output folder: ('+outPATH+') cant build')
 
 # The end
-print('Close data download completion')
+print('[Info] Close data download completion')
 
