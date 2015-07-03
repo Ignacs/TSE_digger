@@ -3,6 +3,7 @@
 import glob, os, sys, platform, subprocess
 from os import listdir
 from os.path import isfile, join
+from findtools.find_files import (find_files, Match)
 
 #import module_PriceAVG 
 #import module_template
@@ -13,8 +14,7 @@ from os.path import isfile, join
 #arg='/home/rox/lab/stock/TSE_dwrobot/db_test/0050.sl3'
 #folder='/home/rox/lab/git_test/TSE_robot/TSE_dwrobot'
 folder='/home/ignacs/lab/git_test/TSE_robot/TSE_dwrobot'
-postPrefix='.sl3'
-
+dbFile_filter='*.sl3'
 
 ############# function to get paht of all files under folder #############
 def get_filepaths(directory):
@@ -37,7 +37,7 @@ def get_filepaths(directory):
 
 ############# function to list all files #############
 def list_files(path):
-	''' function to list all files
+	''' function to list all files under some path
 		'''
 	# returns a list of names (with extension, without full path) of all files 
 	# in folder path
@@ -47,17 +47,23 @@ def list_files(path):
 			files.append(name)
 	return files 
 
-############# function to list all files #############
-# onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
 
+################################################################################
+################################  main section  ################################
 
-################  main section ################
-for foundFiles in list_files(folder):
-# for dbFile in os.path()
-# module_template.module_func(arg)
-	print (foundFiles)
+#for foundFiles in list_files(folder):
+#	print (foundFiles)
+
 
 # Run the above function and store its results in a variable.   
-for foundFiles in get_filepaths(folder):
-	print (foundFiles)
+#for foundFiles in get_filepaths(folder):
+#	print (foundFiles)
+
+
+# func can filter subname
+# Recursively find all *.sh files in **/usr/bin**
+sh_files_pattern = Match(filetype='f', name=dbFile_filter)
+for found_file in find_files(path=folder, match=sh_files_pattern):
+	print (found_file)
+
 sys.exit()
