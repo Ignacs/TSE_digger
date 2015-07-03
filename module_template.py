@@ -17,7 +17,7 @@ short_calDateNum=12
 
 ############### module function #####################
 def module_func(db_fpath):
-	print "Processing DB " + db_fpath 
+	print("Processing DB " + db_fpath )
 	global long_calDateNum, mid_calDateNum, short_calDateNum
 
 	con = lite.connect(db_fpath)
@@ -48,20 +48,14 @@ def module_func(db_fpath):
 	with con:
 		cur = con.cursor()    
 
-		print "Show short-term data"
+		print("Show short-term data")
 		for record in cur.execute("select " + Query_item[0] + "," + Query_item[1] + "," + Query_item[2]+ "," + Query_item[3] +" from stock order by Date limit " + str(short_calDateNum)):
-			print record[0], 
-			print record[1], 
-			print record[2], 
-			print record[3] 
+			print(str(record[0])+ str(record[1])+ str(record[2])+ str(record[3]) )
 
-		print "============================================"
-		print "Show short-term data reverse"
+		print("============================================")
+		print("Show short-term data reverse")
 		for record in cur.execute("select " + Query_item[0] + "," + Query_item[1] + "," + Query_item[2]+ "," + Query_item[3] +" from stock order by Date desc limit " + str(short_calDateNum)):
-			print record[0], 
-			print record[1], 
-			print record[2], 
-			print record[3] 
+			print(str(record[0])+ str(record[1])+ str(record[2])+ str(record[3]))
 
 		# cur.execute("select * from stock where date = " + str(nline_data[0]) ):
 		# cur.execute("select * from stock where date=20150628" ):
@@ -69,14 +63,16 @@ def module_func(db_fpath):
 		#	print ""
 		return 
 
+# Module cant contain main section 
+# 
 # call by itself
 #if __name__ == '__main__':
 #	idx_DB=1
 #	##########################################
 #	# arguments check 
 #	if len(sys.argv) < 2:
-#		print "Too few arguments. Usage:"
-#		print "python module_template.py (database file)"
+#		print("Too few arguments. Usage:")
+#		print("python module_template.py (database file)")
 #		sys.exit(1)
 #
 #	##########################################
@@ -84,15 +80,15 @@ def module_func(db_fpath):
 #	try :
 #		os.stat(str(sys.argv[idx_DB]))
 #	except:
-#		print sys.argv[idx_DB] + " doesnt exist" 
+#		print (sys.argv[idx_DB] + " doesnt exist" )
 #		sys.exit()
 #	module_func(sys.argv[idx_DB])
 #		
 ## call by others 
 #else:
 #	idx_DB=0
+#	print (sys.argv[0])
+#	module_func(sys.argv[0])
 #
-#	sys.argv[idx_DB]
-#	module_func(sys.argv[idx_DB])
-#
+
 # sys.exit()

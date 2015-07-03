@@ -6,22 +6,17 @@ from os.path import basename
 con = None
 # db_postfix=".sl3"
  
-# length of indicator 
-long_calDateNum=108
-mid_calDateNum=36
-short_calDateNum=12
-
-# storage
-longPriceAVG=0.0
-midPriceAVG=0.0
-shortPriceAVG=0.0
-
 ############### module function #####################
 def module_func(db_fpath):
-	global long_calDateNum, mid_calDateNum, short_calDateNum, longPriceAVG, midPriceAVG, shortPriceAVG
-	print "Processing DB " + db_fpath 
+	# length of indicator 
+	long_calDateNum=108
+	mid_calDateNum=36
+	short_calDateNum=12
 
-	con = lite.connect(db_fpath)
+	# storage
+	longPriceAVG=0.0
+	midPriceAVG=0.0
+	shortPriceAVG=0.0
 
 	# table format 
 	#		Date INT,
@@ -37,6 +32,10 @@ def module_func(db_fpath):
 	#		SELL_PRICE REAL,
 	#		SELL_VOL INT,
 	#		PE INT
+
+	print "Processing DB " + db_fpath 
+
+	con = lite.connect(db_fpath)
 
 	# The element to query
 	Query_item=[
@@ -72,33 +71,34 @@ def module_func(db_fpath):
 		# cur.execute("SELECT * FROM stock ")
 		#	print ""
 
+# Module cant contain main section 
 # call by itself
-if __name__ == '__main__':
-	idx_DB=1
-	##########################################
-	# arguments check 
-	if len(sys.argv) < 2:
-		print "Too few arguments. Usage:"
-		print "python module_PriceAVG.py (database file)"
-		sys.exit(1)
-
-	##########################################
-	# check DB exist?
-	try :
-		os.stat(str(sys.argv[idx_DB]))
-	except:
-		print sys.argv[idx_DB] + " doesnt exist" 
-		sys.exit()
+#f __name__ == '__main__':
+#   idx_DB=1
+#   ##########################################
+#   # arguments check 
+#   if len(sys.argv) < 2:
+#   	print "Too few arguments. Usage:"
+#   	print "python module_PriceAVG.py (database file)"
+#   	sys.exit(1)
+#
+#   ##########################################
+#   # check DB exist?
+#   try :
+#   	os.stat(str(sys.argv[idx_DB]))
+#   except:
+#   	print sys.argv[idx_DB] + " doesnt exist" 
+#   	sys.exit()
 # call by others 
-	module_func(sys.argv[idx_DB])
-else:
-
-	idx_DB=0
-	print '\nhandle ' + sys.argv[0] + '\n'
-	module_func()
-
-
-
-sys.exit()
-
+#   module_func(sys.argv[idx_DB])
+#lse:
+#
+#   idx_DB=0
+#   print '\nhandle ' + sys.argv[0] + '\n'
+#   module_func()
+#
+#
+#
+#sys.exit()
+#
 
