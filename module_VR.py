@@ -87,7 +87,7 @@ def module_func(db_fpath):
 				# print("\tidx " + str(idx) + "\t\t", end="") 
 				# print( str(record[idx][idx_CLOSE])  )
 				pClose = 0.0
-				if(str(record[idx][idx_CLOSE]) == "--") :
+				if(str(record[idx][idx_CLOSE]) == "--"):
 					pClose = 0.0
 				else :
 					pClose = float(record[idx][idx_CLOSE])
@@ -96,7 +96,7 @@ def module_func(db_fpath):
 				if(-1 == idx):
 					eqVol = record[idx][idx_STOCK_NUM]
 					# print( " case 1")
-				elif ( pClose < str(perviousDayClose): 
+				elif ( pClose < perviousDayClose): 
 					negVol = negVol + record[idx][idx_STOCK_NUM]
 					# print( " case 2 [%f]<>[%f] "  % (perviousDayClose, pClose))
 
