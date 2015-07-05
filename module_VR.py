@@ -48,25 +48,24 @@ def module_func(db_fpath):
 		'Date',
 		'CLOSE',
 		'Stock_number']
-
-	print("Processing DB " + db_fpath) 
+	# print("Processing DB " + db_fpath) 
 
 	con = lite.connect(db_fpath)
 
 	# "with" keyword will release resource autombatically and handle error.
 	with con:
 		cur = con.cursor()    
-		print ("connect DB...") 
+		# print ("connect DB...") 
 
 		# list data from numbers of day
 		for offsetDay in range(0, numDaytoCal):
-			print ("--------------- %10d --------------- " % offsetDay ) 
+			# print ("--------------- %10d --------------- " % offsetDay ) 
 			# list numbers of day to calculate
 			cur.execute("select " + Query_item[0] + "," + Query_item[2] + " from stock order by Date desc limit 1 offset " + str(offsetDay))
 			record=cur.fetchall()
 			# print( " %d |" % record[0] ,end="")
-			for result in record:
-				print( " %d | vol: " % result[0] , result[1])
+			# for result in record:
+			#	print( " %d | vol: " % result[0] , result[1])
 
 			# inverse calculate # from older day start
 			cur.execute("select " + Query_item[0] + "," + Query_item[1] + "," + Query_item[2] + " from stock order by Date desc limit " + str(long_calDateNum) + " offset " + str(offsetDay))
@@ -81,19 +80,23 @@ def module_func(db_fpath):
 				len_cal = len(record)
 			else :
 				len_cal = long_calDateNum
-			print ("\tlen of record %d" % len(record) )
+			# print ("\tlen of record %d" % len(record) )
 
 			# count by neg index 
 			while (len_cal+1) > (-idx):
-				print("\tidx " + str(idx) + "\t\t", end="") 
-				print( str(record[idx])  )
-				pClose = float(record[idx][idx_CLOSE])
-				print( " %f "  % float(record[idx][idx_CLOSE]))
+				# print("\tidx " + str(idx) + "\t\t", end="") 
+				# print( str(record[idx][idx_CLOSE])  )
+				pClose = 0.0
+				if(str(record[idx][idx_CLOSE]) == "--") :
+					pClose = 0.0
+				else :
+					pClose = float(record[idx][idx_CLOSE])
+				# print( " %f "  % float(record[idx][idx_CLOSE]))
 
 				if(-1 == idx):
 					eqVol = record[idx][idx_STOCK_NUM]
 					# print( " case 1")
-				elif ( pClose < perviousDayClose): 
+				elif ( pClose < str(perviousDayClose): 
 					negVol = negVol + record[idx][idx_STOCK_NUM]
 					# print( " case 2 [%f]<>[%f] "  % (perviousDayClose, pClose))
 
@@ -104,16 +107,20 @@ def module_func(db_fpath):
 				else : 
 					eqVol = eqVol + record[idx][idx_STOCK_NUM]
 					# print( " case 4 [%f]<>[%f]"  % (perviousDayClose, pClose))
-				perviousDayClose = record[idx][idx_CLOSE]
+				
+				if(str(record[idx][idx_CLOSE]) == "--") :
+					perviousDayClose = 0.0
+				else :
+					perviousDayClose = float(record[idx][idx_CLOSE])
 				idx = idx -1
 
 			result = 0 
-			print ("\t Neg Vol = %d, equal Vol = %d, post Vol = %d" % (negVol ,eqVol, posVol))
+			# print ("\t Neg Vol = %d, equal Vol = %d, post Vol = %d" % (negVol ,eqVol, posVol))
 
 			if (negVol + eqVol) != 0: 
 				result = (posVol + eqVol*0.5) / (negVol + eqVol*0.5) * 100
 			else :
 				print ("\t[Error] Neg Vol = %d, equal Vod = %d" % (negVol ,eqVol))
 
-			print( "\t%.2f%%" % round(result,2) )
+			return round(result,2)
 
