@@ -11,14 +11,22 @@ db_postfix=".sl3"
  
 
 ################## module section ##################
-def module_func(db_fpath):
+# 
+# arguments: 
+#	db_fpath: database full path 
+# length_cal: length of day to calculate
+# 
+def module_func(db_fpath, length_cal):
 	'''
 		Volume ratio
 	'''
 
 	# numDaytoCal=30
 	numDaytoCal=1
-	long_calDateNum=108
+	if (int(length_cal)<0 ):								
+		long_calDateNum=length_cal
+	else:
+		long_calDateNum=108
 	mid_calDateNum=36
 	short_calDateNum=12
 
