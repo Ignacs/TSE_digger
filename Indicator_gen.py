@@ -4,6 +4,7 @@ import glob, os, sys, platform, subprocess
 # import module_PriceAVG 
 import module_VR
 import list_all_files
+from os.path import basename
 
 def debug_info(strMsg):
 	print (strMsg)
@@ -20,7 +21,12 @@ dbFile_filter='*.sl3'
 
 idx= 1
 for foundFiles in list_all_files.get_filepaths(DB_folder, dbFile_filter ):
-	print (str(idx)+ " " + str(foundFiles))
-	idx=idx+1
+    # calculate VR to get stocks that priced maybe too lower 
+    VR=module_VR.module_func(foundFiles, 108)
+    if 80 > VR: 
+        print (str(idx)+ " " + str(basename(foundFiles)) + " " + str(VR))
+
+        # index increasement
+        idx=idx+1
 
 sys.exit()
