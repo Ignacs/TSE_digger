@@ -76,8 +76,8 @@ def module_func(db_fpath, length_cal=108):
         for offsetDay in range(0, numDaytoCal):
             # print ("--------------- %10d --------------- " % offsetDay ) 
             # list numbers of day to calculate
-            cur.execute("select " + Query_item[0] + "," + Query_item[2] + " from stock order by Date desc limit 1 offset " + str(offsetDay))
-            record=cur.fetchall()
+            # cur.execute("select " + Query_item[0] + "," + Query_item[2] + " from stock order by Date desc limit 1 offset " + str(offsetDay))
+            # record=cur.fetchall()
             # print( " %d |" % record[0] ,end="")
             # for result in record:
             #	print( " %d | vol: " % result[0] , result[1])
@@ -85,19 +85,17 @@ def module_func(db_fpath, length_cal=108):
             # inverse calculate # from older day start
             cur.execute("select " + Query_item[0] + "," + Query_item[1] + "," + Query_item[2] + " from stock order by Date desc limit " + str(long_calDateNum) + " offset " + str(offsetDay))
             record=cur.fetchall()
-            idx_Date=0
+            # idx_Date=0
             idx_CLOSE=1
             idx_STOCK_NUM=2
 
             idx = -1
-            # check which length is shorted to prevent out of range 
-            if long_calDateNum > len(record):
-                len_cal = len(record)
-            else :
-                len_cal = long_calDateNum
+            # which length is shorted to prevent out of range 
+            len_cal = len(record)
+
             # print ("\tlen of record %d" % len(record) )
 
-            # count by neg index 
+            # get by counter-count # from old date to new date
             while (len_cal+1) > (-idx):
                 # print("\tidx " + str(idx) + "\t\t", end="") 
                 # print( str(record[idx][idx_CLOSE])  )
